@@ -79,6 +79,11 @@ Chạy với dữ liệu mẫu: `flutter run -d windows --dart-define=SEED_MOCK=
 - Giao việc nhỏ, có biên giới rõ (một file/module + test), không "viết cả app".
 - Gặp lỗi: tự đọc log, ghi phán đoán nguyên nhân trước rồi mới nhờ AI sửa.
 - Tự đọc lại bằng mắt các hàm lõi (sync, export, tính tổng) để kiểm tra I1–I5.
+- **Chưa rõ thì hỏi lại người dùng, không tự đoán.** Áp dụng khi chưa chắc về
+  hướng làm, phạm vi việc, nghiệp vụ, phần nào thuộc ai (mục 7), hoặc khi spec
+  (`IMPLEMENTATION_PLAN.md`, `REQUIREMENTS.md`) không nói / nói mâu thuẫn. Dừng và
+  hỏi ngắn gọn trước khi code; nếu được, kèm 2–3 phương án và nêu phương án đề xuất.
+  Việc tự kiểm chứng được bằng code, `git log` hoặc tài liệu thì tự tra, không hỏi.
 
 ## 7. Phân công thư mục (tránh conflict)
 

@@ -44,9 +44,9 @@ Repository này được thiết lập bởi **Hà Tiến Triệu ([@trieuwu](ht
 | Vai trò (Role) | Họ và Tên | GitHub | Nhánh làm việc chính | Phân hệ kỹ thuật phụ trách |
 | :--- | :--- | :--- | :--- | :--- |
 | **Project Sponsor / Mentor** | Hà Tiến Triệu | [@trieuwu](https://github.com/trieuwu) | `main` | Thiết lập bài toán, review kiến trúc & nghiệm thu sản phẩm |
-| **PO (Product Owner)** | `<!-- Điền Họ tên -->` | `<!-- @username -->` | `<!-- VD: feat/... -->` | Quản lý phạm vi MVP, luồng nghiệp vụ, tài liệu hóa & phân hệ `<!-- Điền tên module -->` |
-| **Dev (Lead Developer)** | `<!-- Điền Họ tên -->` | `<!-- @username -->` | `<!-- VD: feat/... -->` | Kiến trúc cốt lõi, Database/Core Services, review tích hợp & phân hệ `<!-- Điền tên module -->` |
-| **Tester (QA / QC Lead)** | `<!-- Điền Họ tên -->` | `<!-- @username -->` | `<!-- VD: feat/... -->` | Thiết kế Test Cases, kiểm thử biên/bảo mật, CI/Test tự động & phân hệ `<!-- Điền tên module -->` |
+| **PO (Product Owner)** | Nguyễn Tú Anh | [@nguyentuanh-fw](https://github.com/nguyentuanh-fw) | `feat/dashboard-va-bieu-do` | Quản lý phạm vi MVP, luồng nghiệp vụ, tài liệu hóa & phân hệ Dashboard, biểu đồ, theme (`lib/features/dashboard/`, `lib/core/theme/`, `lib/core/utils/`) |
+| **Dev (Lead Developer)** | Phùng Hải Đăng | [@TemuBroCode](https://github.com/TemuBroCode) | `feat/dong-bo-csv-va-excel` | Kiến trúc cốt lõi, Database/Core Services, review tích hợp & phân hệ Database, đồng bộ CSV iCloud, xuất Excel (`lib/data/`, `lib/features/icloud_sync/`, `lib/features/excel_export/`) |
+| **Tester (QA / QC Lead)** | Đàm Thuận Khải | [@tkai-better](https://github.com/tkai-better) | `feat/giao-dich-va-lich` | Thiết kế Test Cases, kiểm thử biên/bảo mật, CI/Test tự động & phân hệ khung ứng dụng, Giao dịch, Lịch chi tiêu (`lib/core/widgets/`, `lib/features/transactions/`, `lib/features/calendar_view/`) |
 
 ---
 

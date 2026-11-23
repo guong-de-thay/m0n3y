@@ -1,0 +1,93 @@
+# CLAUDE.md — Quy tắc cho AI Agent khi làm việc trong dự án `m0n3y`
+
+Ứng dụng quản lý thu chi cá nhân, Flutter Windows Desktop, offline-first.
+Đặc tả đầy đủ: `IMPLEMENTATION_PLAN.md`. Quy chế nhóm: `REQUIREMENTS.md`.
+
+## 1. Kiến trúc & phân tầng (một chiều)
+
+```
+SQLite (Drift) → DAO → Repository → Riverpod (StreamProvider / AsyncNotifier) → Widget
+```
+
+- `lib/data/` — Drift tables, DAO, repository. **Chỉ nơi này được đụng DB.**
+- `lib/features/<tên>/{domain,providers,presentation,services}/` — theo feature.
+- `lib/core/` — dùng chung: constants, theme, utils, widgets.
+- `presentation` chỉ gọi `providers`; `providers` gọi `repositories/services`.
+- **Tuyệt đối không** viết SQL / gọi DAO / `AppDatabase` trực tiếp trong Widget.
+- Không dùng `setState` cho dữ liệu toàn cục; dùng Riverpod. Danh sách/tổng hợp
+  phải đi qua `Stream` của Drift (`watch`) để UI tự cập nhật (I5).
+- Mọi truy vấn dùng Drift type-safe API, **không nối chuỗi SQL**.
+- Không hard-code đường dẫn của một máy cụ thể (ví dụ `C:\Users\...`).
+
+## 2. Bất biến dữ liệu (không được vi phạm)
+
+| # | Bất biến |
+|---|---|
+| I1 | Tiền là `int` (VNĐ) ở DB, Model và mọi phép cộng/trừ. Cấm `double`/`float`. |
+| I2 | Chỉ xóa dòng trong `pending_transactions.csv` **sau khi** `COMMIT` DB thành công. Dòng lỗi phải được giữ lại. |
+| I3 | Mọi báo cáo (Dashboard, Calendar, tên Sheet Excel `MM-YYYY`) tính theo `transaction_date`, **không** theo `created_at` / `DateTime.now()`. |
+| I4 | Danh mục khớp qua `normalized_name = name.trim().toLowerCase()` + `type`; không tạo trùng. |
+| I5 | UI tự cập nhật sau sync / thêm / sửa / xóa, không cần khởi động lại. |
+
+Quy ước khác:
+- Ngày hiển thị, đọc CSV, xuất Excel: `dd/MM/yyyy` (parse fallback `yyyy-MM-dd`).
+- `year_month` (`YYYY-MM`) do `TransactionsDao` tự tính; **không** tự điền ở nơi khác.
+- Hiển thị tiền: `1.250.000 ₫`.
+
+## 3. Bảo mật
+
+- Chuỗi `Note`/`Category` khi ghi Excel/CSV bắt đầu bằng `= + - @ \t \r` → thêm `'` ở đầu.
+- Giới hạn kích thước file CSV trước khi đọc; bắt lỗi file bị khóa / sai UTF-8 và
+  báo bằng tiếng Việt thân thiện, không để app crash.
+
+## 4. Lệnh kiểm tra (chạy trước mỗi PR)
+
+```powershell
+dart format --output=none --set-exit-if-changed .
+flutter analyze
+flutter test
+# Sau khi sửa bảng Drift:
+dart run build_runner build
+```
+
+Chạy với dữ liệu mẫu: `flutter run -d windows --dart-define=SEED_MOCK=true`.
+
+## 5. Git & quy tắc commit (bắt buộc)
+
+- Làm việc trên repo gốc; **không push thẳng `main`**, không `git push --force`
+  lên `main`/`develop`. Nhánh tính năng tách từ `develop`: `feat/…`, `fix/…`,
+  `docs/…`, `test/…`.
+- Conventional Commits, mô tả tiếng Việt có dấu ≤ 72 ký tự:
+  `feat(sync): tự động tạo danh mục mới khi đồng bộ CSV`.
+  `type`: feat, fix, refactor, test, docs, style, chore.
+  `scope`: db, sync, excel, dashboard, calendar, transactions, core.
+- Mỗi commit một thay đổi logic; commit ngay khi test xanh.
+- **TUYỆT ĐỐI KHÔNG** thêm dấu vết AI vào commit/PR/code: không `Co-Authored-By`,
+  không "Generated with…", không `@claude`, không icon 🤖. Người commit chịu 100%
+  trách nhiệm. Kiểm tra: `git log --format=%B -n 5`.
+- Không commit: `build/`, `.dart_tool/`, `.env`, `*.sqlite`, `*.db`, `*.xlsx` sinh ra khi chạy thử.
+- Mở PR vào `develop` theo `.github/pull_request_template.md`, cần ≥ 1 người review khác.
+
+## 6. Cách giao việc cho AI
+
+- Giao việc nhỏ, có biên giới rõ (một file/module + test), không "viết cả app".
+- Gặp lỗi: tự đọc log, ghi phán đoán nguyên nhân trước rồi mới nhờ AI sửa.
+- Tự đọc lại bằng mắt các hàm lõi (sync, export, tính tổng) để kiểm tra I1–I5.
+
+## 7. Phân công thư mục (tránh conflict)
+
+| Vai trò | Thư mục |
+|---|---|
+| Dev | `lib/data/**`, `lib/features/icloud_sync/**`, `lib/features/excel_export/**` |
+| Tester | `lib/core/widgets/**`, `lib/features/transactions/**`, `lib/features/calendar_view/**` |
+| PO | `lib/core/theme/**`, `lib/core/utils/**`, `lib/features/dashboard/**` |
+
+Muốn đổi schema (`app_database.dart`) hoặc interface DAO/Repository: báo Dev,
+sửa trong một PR riêng và chạy lại `build_runner`.
+
+## 8. Ghi chú môi trường
+
+- `window_manager` được ghim `^0.5.x`. Bản 0.7 phụ thuộc `nativeapi` cần trình
+  biên dịch C++ ngay cả khi `flutter test`/`analyze`, và đổi API.
+- Build Windows cần Visual Studio (workload "Desktop development with C++") và
+  bật Developer Mode (symlink) trong Windows Settings.

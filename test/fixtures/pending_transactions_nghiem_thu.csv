@@ -1,0 +1,7 @@
+Ngày,Loại,Danh mục,Số tiền,Ghi chú
+24/11/2026,Chi,Ăn uống,65000,Phở bò buổi sáng
+10/11/2026,Chi,Mua sắm,1250000,"*Mua bàn phím cơ (nhập bù ngày 10/11)"
+28/10/2026,Thu,Thưởng,3000000,Thưởng dự án tháng 10 nhập muộn
+20/11/2026,Chi,Thú cưng,180000,"Cát mèo, đồ chơi"
+22/11/2026,Chi,Ăn uống,abc,Cố tình nhập sai số tiền
+23/11/2026,Chi,Khác,50000,=SUM(A1)

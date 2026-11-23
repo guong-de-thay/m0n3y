@@ -91,3 +91,25 @@ sửa trong một PR riêng và chạy lại `build_runner`.
   biên dịch C++ ngay cả khi `flutter test`/`analyze`, và đổi API.
 - Build Windows cần Visual Studio (workload "Desktop development with C++") và
   bật Developer Mode (symlink) trong Windows Settings.
+
+## 9. Trạng thái hiện tại (cập nhật cuối mỗi phiên làm việc)
+
+Đây là bản chụp tiến độ để phiên mới không phải khám phá lại repo. Nếu mâu thuẫn
+với code/`git log`, tin code và `git log`, rồi sửa mục này.
+
+- Nhánh đang làm: `feat/dong-bo-csv-va-excel`
+- **Đã có:**
+  - `lib/data/`: schema Drift, `CategoriesDao`, `TransactionsDao`,
+    `TransactionRepository`, `SettingsRepository`, `SyncRepository`
+    (ghi lô CSV trong một transaction), `mock_data.dart`, `data_providers.dart`.
+  - `lib/features/icloud_sync/`: `CsvSyncService`, `SyncController`, `SyncResult`.
+  - `lib/features/excel_export/`: `ExcelExportService`, `ExportController`
+    (Sheet `MM-YYYY`, chống Formula Injection).
+  - `lib/core/`: `year_month.dart`, `default_categories.dart`.
+- **Chưa có (`lib/` chưa có file nào):** `core/theme`, `core/widgets`,
+  `features/dashboard`, `features/transactions`, `features/calendar_view`;
+  nút Sync/Export chưa gắn vào UI.
+- **Việc tiếp theo:** xem `IMPLEMENTATION_PLAN.md` để chọn feature kế tiếp
+  (gợi ý: theme + khung điều hướng, rồi màn Giao dịch / Dashboard).
+- Quy trình kết phiên: chạy mục 4, commit theo mục 5, rồi cập nhật mục này.
+- Tiếp tục đúng mạch: `claude -c`; chọn phiên cũ: `claude -r`.

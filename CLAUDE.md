@@ -66,6 +66,12 @@ Chạy với dữ liệu mẫu: `flutter run -d windows --dart-define=SEED_MOCK=
   không "Generated with…", không `@claude`, không icon 🤖. Người commit chịu 100%
   trách nhiệm. Kiểm tra: `git log --format=%B -n 5`.
 - Không commit: `build/`, `.dart_tool/`, `.env`, `*.sqlite`, `*.db`, `*.xlsx` sinh ra khi chạy thử.
+- **File cục bộ không thuộc dự án thì cho vào `.gitignore`, không commit.** Gồm:
+  file sinh ra để tối ưu cho máy/công cụ của riêng một người (cache, đồ thị
+  `graphify-out/`, cấu hình/bộ nhớ của AI agent như `.claude/`, `.agents/`, ghi chú
+  bàn giao `HANDOFF.md`…). Tiêu chí: người clone repo không cần nó để build,
+  chạy, test hay hiểu dự án. Khi tạo/phát hiện file như vậy (thấy trong
+  `git status` ở dạng `??`), thêm vào `.gitignore` trong cùng phiên, rồi mới commit.
 - Mở PR vào `develop` theo `.github/pull_request_template.md`, cần ≥ 1 người review khác.
 
 ## 6. Cách giao việc cho AI

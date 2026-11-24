@@ -59,12 +59,12 @@ Repository này được thiết lập bởi **Hà Tiến Triệu ([@trieuwu](ht
 
 | Hạng mục / Tính năng | Mô tả & Bất biến kỹ thuật | Trạng thái |
 | :--- | :--- | :---: |
-| **Tầng Cơ sở dữ liệu SQLite (Drift ORM)** | Lưu trữ `categories`, `transactions`, `sync_batches`. Tiền tệ bắt buộc lưu kiểu `INTEGER` (VNĐ) để không sai số dấu phẩy động. | `SẼ LÀM` |
-| **Đồng bộ CSV từ iCloud Drive (`CsvSyncService`)** | Đọc `pending_transactions.csv` chuẩn ngày `dd/MM/yyyy`, hỗ trợ lùi ngày (`transaction_date`), tự tạo danh mục mới, xóa trắng file an toàn sau khi commit DB. | `SẼ LÀM` |
+| **Tầng Cơ sở dữ liệu SQLite (Drift ORM)** | Lưu trữ `categories`, `transactions`, `sync_batches`. Tiền tệ bắt buộc lưu kiểu `INTEGER` (VNĐ) để không sai số dấu phẩy động. | `ĐÃ CÓ` |
+| **Đồng bộ CSV từ iCloud Drive (`CsvSyncService`)** | Đọc `pending_transactions.csv` chuẩn ngày `dd/MM/yyyy`, hỗ trợ lùi ngày (`transaction_date`), tự tạo danh mục mới, xóa trắng file an toàn sau khi commit DB. Phần logic đã xong và có test; nút bấm trên giao diện chờ gắn vào khung ứng dụng. | `ĐÃ CÓ` |
 | **Màn hình Tổng quan (`Dashboard`)** | 3 thẻ KPI (Tổng số dư, Thu tháng, Chi tháng), biểu đồ dòng tiền & cơ cấu danh mục (`fl_chart`), bảng **Visual Notes** (chi tiêu lớn + ghi chú gắn dấu `*`). | `SẼ LÀM` |
 | **Màn hình Lịch chi tiêu (`Calendar View`)** | Bố cục 2 panel màn hình ngang: Lưới lịch tháng bên trái hiển thị `+Thu / -Chi` từng ngày + Panel chi tiết giao dịch của ngày đang chọn bên phải. | `SẼ LÀM` |
 | **Màn hình Quản lý Giao dịch (`Transactions`)** | Bảng dữ liệu Desktop, bộ lọc đa chiều (khoảng ngày, danh mục, loại thu/chi, từ khóa ghi chú) và hộp thoại Thêm / Sửa / Xóa giao dịch. | `SẼ LÀM` |
-| **Xuất Báo cáo Excel (`ExcelExportService`)** | Xuất file `.xlsx` tự động tách từng Sheet theo tháng (`MM-YYYY`), có tổng kết Thu - Chi - Dư và chống lỗi CSV/Formula Injection. | `SẼ LÀM` |
+| **Xuất Báo cáo Excel (`ExcelExportService`)** | Xuất file `.xlsx` tự động tách từng Sheet theo tháng (`MM-YYYY`), có tổng kết Thu - Chi - Dư và chống lỗi CSV/Formula Injection. Phần logic đã xong và có test; nút bấm trên giao diện chờ gắn vào khung ứng dụng. | `ĐÃ CÓ` |
 | **Bóc tách Ảnh Hóa đơn từ Điện thoại (OCR/Vision)** | Ném ảnh hóa đơn / màn hình chuyển khoản từ điện thoại lên $\rightarrow$ bóc tách số tiền, ngày giờ, tên quán $\rightarrow$ chuẩn hóa & đẩy vào Database. | `HƯỚNG` |
 
 ---

@@ -49,6 +49,21 @@ class MonthTotals {
   int get balance => income - expense;
 }
 
+/// Tổng thu/chi của một tháng trong chuỗi nhiều tháng (cho biểu đồ cột).
+class MonthlySummary {
+  const MonthlySummary({
+    required this.yearMonth,
+    this.income = 0,
+    this.expense = 0,
+  });
+
+  /// Dạng `YYYY-MM`, tính từ `transaction_date` (I3).
+  final String yearMonth;
+  final int income;
+  final int expense;
+  int get balance => income - expense;
+}
+
 /// Tổng tiền theo danh mục (cho PieChart).
 class CategoryTotal {
   const CategoryTotal({required this.category, required this.total});

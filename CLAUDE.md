@@ -113,14 +113,26 @@ với code/`git log`, tin code và `git log`, rồi sửa mục này.
   - `lib/data/`: schema Drift, `CategoriesDao`, `TransactionsDao`,
     `TransactionRepository`, `SettingsRepository`, `SyncRepository`
     (ghi lô CSV trong một transaction), `mock_data.dart`, `data_providers.dart`.
-  - `lib/features/icloud_sync/`: `CsvSyncService`, `SyncController`, `SyncResult`.
+    Có thêm `watchMonthlySeries` (tổng Thu/Chi từng tháng, cho biểu đồ cột).
+  - `lib/features/icloud_sync/`: `CsvSyncService`, `SyncController`, `SyncResult`,
+    `SyncFeedbackListener` (SnackBar + Dialog dòng lỗi).
   - `lib/features/excel_export/`: `ExcelExportService`, `ExportController`
-    (Sheet `MM-YYYY`, chống Formula Injection).
+    (Sheet `MM-YYYY`, chống Formula Injection), `ExportFeedbackListener`.
   - `lib/core/`: `year_month.dart`, `default_categories.dart`.
-- **Chưa có (`lib/` chưa có file nào):** `core/theme`, `core/widgets`,
-  `features/dashboard`, `features/transactions`, `features/calendar_view`;
-  nút Sync/Export chưa gắn vào UI.
-- **Việc tiếp theo:** xem `IMPLEMENTATION_PLAN.md` để chọn feature kế tiếp
-  (gợi ý: theme + khung điều hướng, rồi màn Giao dịch / Dashboard).
+  - `test/`: 77 test pass; `test/fixtures/pending_transactions_nghiem_thu.csv`
+    và `acceptance_flow_test.dart` là kịch bản nghiệm thu Sync → Export.
+  - `docs/BAO_CAO_NGHIEM_THU.md` (nhánh `docs/bao-cao-nghiem-thu`, chưa có PR).
+- **Chưa có trong nhánh này:** `core/theme`, `core/widgets`, `features/dashboard`,
+  `features/transactions`, `features/calendar_view`. Nhánh Tester
+  `feat/giao-dich-va-lich` đã có `DesktopShell`, `TopActionBar`, màn Transactions
+  (chưa có PR); nhánh PO `feat/dashboard-va-bieu-do` chưa có commit.
+  Nút Sync/Export chưa gắn vào UI (`lib/app.dart` chưa truyền callback).
+- **Việc tiếp theo:** (1) PR #3 cần review chéo rồi merge; (2) sau khi PR #3 và PR
+  Transactions vào `develop`, mở PR gắn Sync/Export vào `DesktopShell` và bọc
+  `SyncFeedbackListener`/`ExportFeedbackListener` trong `lib/app.dart`;
+  (3) chạy tay Golden Path và điền mục 7 của báo cáo nghiệm thu;
+  (4) cập nhật README mục 3 và 4.
+- Chạy `flutter` trên máy này: `D:\flutter\bin` chưa nằm trong PATH của shell,
+  thêm vào PATH trước khi chạy lệnh mục 4.
 - Quy trình kết phiên: chạy mục 4, commit theo mục 5, rồi cập nhật mục này.
 - Tiếp tục đúng mạch: `claude -c`; chọn phiên cũ: `claude -r`.

@@ -1,6 +1,6 @@
 # Báo cáo nghiệm thu — phân hệ Dữ liệu & Đồng bộ (Dev)
 
-- **Phạm vi:** `lib/data/**`, `lib/features/icloud_sync/**`, `lib/features/excel_export/**` (nhánh `feat/dong-bo-csv-va-excel`, PR #3).
+- **Phạm vi:** `lib/data/**`, `lib/features/icloud_sync/**`, `lib/features/excel_export/**` (PR #3 từ nhánh `feat/dong-bo-csv-va-excel`, đã gộp vào `develop` ở commit 587624e).
 - **Ngày lập:** 24/11/2026.
 - **Cách đọc:** mỗi mục có trạng thái và bằng chứng. `Đạt` = có test tự động hoặc kết quả lệnh ở mục 2. `Chờ tích hợp` = phụ thuộc phân hệ của PO/Tester chưa nằm trong `develop`. `Chưa chạy tay` = chưa kiểm bằng thao tác trên ứng dụng thật.
 
@@ -22,7 +22,7 @@ flutter test
 
 ## 2. Kết quả kiểm tra tự động
 
-Chạy ngày 24/11/2026 trên nhánh `feat/dong-bo-csv-va-excel`:
+Chạy lại ngày 24/11/2026 trên `develop` sau khi gộp PR #3 (nhánh `docs/bao-cao-nghiem-thu` đã gộp `origin/develop`):
 
 | Lệnh | Kết quả |
 |---|---|
@@ -54,8 +54,8 @@ Phân bổ test:
 | | `flutter analyze` 0 lỗi, `flutter test` pass | **Đạt** | Mục 2 |
 | 3. Git và điều phối AI (20%) | Conventional Commits tiếng Việt; không `Co-Authored-By` AI; không file rác | **Đạt** | Mục 8 |
 | | Có `CLAUDE.md` / `AGENTS.md` | **Đạt** | Hai file ở thư mục gốc |
-| | Dùng PR template; review chéo | **Một phần** | PR #3 theo template; **chưa có review** (REVIEW_REQUIRED) |
-| 4. Tài liệu (20%) | README đầy đủ, ≥ 3 sơ đồ mermaid | **Chưa** | README mục 4.1 và 4.2 còn trống |
+| | Dùng PR template; review chéo | **Đạt** | PR #3 theo template, được PO duyệt (Approved) rồi gộp bằng merge commit |
+| 4. Tài liệu (20%) | README đầy đủ, ≥ 3 sơ đồ mermaid | **Chưa** | README mục 4.1 và 4.2 còn trống; đang làm ở PR riêng (mục 9, số 4) |
 
 ## 4. Bốn quy tắc nghiệp vụ (IMPLEMENTATION_PLAN mục 3)
 
@@ -109,7 +109,7 @@ Phần cần thao tác trên ứng dụng thật — **Chưa chạy tay**, đi�
 
 ## 8. Kiểm tra Git
 
-Chạy trên nhánh `feat/dong-bo-csv-va-excel`:
+Chạy trên `develop` sau khi gộp PR #3 (587624e):
 
 - Quét toàn bộ nội dung commit tìm `Co-Authored-By`, `Generated with`, `🤖`, `@claude`: **0 kết quả**.
 - Tiêu đề commit không khớp `type(scope): mô tả` (trừ commit merge): **không có**.
@@ -117,9 +117,9 @@ Chạy trên nhánh `feat/dong-bo-csv-va-excel`:
 
 ## 9. Tồn đọng và rủi ro
 
-1. **PR #3 chưa có review chéo.** Cần ít nhất một thành viên khác (ưu tiên Tester) đọc code và chạy thử trước khi merge.
-2. **Chưa gắn nút vào giao diện.** `lib/app.dart` cần truyền `onSyncCsv` / `onExportExcel` vào `DesktopShell` và bọc `SyncFeedbackListener` / `ExportFeedbackListener`. Việc này làm sau khi PR #3 và PR Transactions của Tester vào `develop`; `top_action_bar.dart` thuộc thư mục của Tester.
+1. **Review chéo PR #3 đã xong.** PO đã duyệt và PR đã gộp. Tester chưa đọc phần này, nên nếu có thể nên nhờ thêm một lượt chạy thử trên máy khác.
+2. **Chưa gắn nút vào giao diện.** `lib/app.dart` cần truyền `onSyncCsv` / `onExportExcel` vào `DesktopShell` và bọc `SyncFeedbackListener` / `ExportFeedbackListener`. Việc này làm sau khi PR Transactions của Tester vào `develop` (nhánh `feat/giao-dich-va-lich` chưa có PR và đang tụt so với `develop`); `top_action_bar.dart` thuộc thư mục của Tester.
 3. **Dashboard và Calendar chưa có**, nên I5 và quy tắc Visual Notes mới kiểm được ở tầng dữ liệu.
-4. **README** mục 3 (trạng thái tính năng) và mục 4 (3 sơ đồ mermaid) chưa cập nhật.
+4. **README** mục 3 (trạng thái tính năng) và mục 4 (3 sơ đồ mermaid, bảng quyết định kỹ thuật) chưa cập nhật. Dev đang làm ở một PR riêng.
 5. **Chưa kiểm trên Microsoft Excel thật.** Test đọc lại file bằng thư viện `excel`; cần mở bằng Excel để xác nhận `SUM` và ô công thức.
 6. **Ghi chú công thức** (`=SUM(...)`) được lưu nguyên trong DB và chỉ được vô hiệu khi xuất Excel. Nếu sau này có chức năng xuất CSV, cần áp dụng cùng cách xử lý.

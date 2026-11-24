@@ -163,6 +163,70 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   /// Tổng thu/chi toàn thời gian (số dư = thu - chi).
   Stream<MonthTotals> watchAllTimeTotals() => _watchTotals();
 
+  /// Tổng thu/chi từng tháng trong khoảng [fromYm]..[toYm] (cả hai đầu, dạng
+  /// `YYYY-MM`), cũ → mới, cho biểu đồ cột Thu–Chi. Tháng không có giao dịch
+  /// vẫn được trả về với 0 để trục thời gian liên tục. Gom theo `year_month`
+  /// (I3) và cộng trong SQLite trên INTEGER (I1).
+  Stream<List<MonthlySummary>> watchMonthlySeries(String fromYm, String toYm) {
+    final months = _monthsBetween(fromYm, toYm);
+    final total = transactions.amount.sum();
+    final q = selectOnly(transactions)
+      ..addColumns([transactions.yearMonth, transactions.type, total])
+      ..where(
+        transactions.yearMonth.isBiggerOrEqualValue(fromYm) &
+            transactions.yearMonth.isSmallerOrEqualValue(toYm),
+      )
+      ..groupBy([transactions.yearMonth, transactions.type]);
+    return q.watch().map((rows) {
+      final income = <String, int>{};
+      final expense = <String, int>{};
+      for (final r in rows) {
+        final ym = r.read(transactions.yearMonth)!;
+        final sum = (r.read(total) ?? 0).toInt();
+        switch (r.readWithConverter(transactions.type)) {
+          case TxType.income:
+            income[ym] = sum;
+          case TxType.expense:
+            expense[ym] = sum;
+          case null:
+            break;
+        }
+      }
+      return [
+        for (final ym in months)
+          MonthlySummary(
+            yearMonth: ym,
+            income: income[ym] ?? 0,
+            expense: expense[ym] ?? 0,
+          ),
+      ];
+    });
+  }
+
+  /// Danh sách `YYYY-MM` từ [fromYm] đến [toYm]; rỗng nếu [fromYm] > [toYm].
+  List<String> _monthsBetween(String fromYm, String toYm) {
+    final re = RegExp(r'^(\d{4})-(0[1-9]|1[0-2])$');
+    final a = re.firstMatch(fromYm);
+    final b = re.firstMatch(toYm);
+    if (a == null || b == null) {
+      throw ArgumentError('Tháng phải có dạng YYYY-MM: $fromYm, $toYm');
+    }
+    var y = int.parse(a.group(1)!);
+    var m = int.parse(a.group(2)!);
+    final endY = int.parse(b.group(1)!);
+    final endM = int.parse(b.group(2)!);
+    final out = <String>[];
+    while (y < endY || (y == endY && m <= endM)) {
+      out.add(yearMonthOf(DateTime(y, m)));
+      m++;
+      if (m > 12) {
+        m = 1;
+        y++;
+      }
+    }
+    return out;
+  }
+
   Stream<MonthTotals> _watchTotals({Expression<bool>? where}) {
     final total = transactions.amount.sum();
     final q = selectOnly(transactions)

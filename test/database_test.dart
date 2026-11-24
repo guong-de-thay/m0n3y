@@ -257,6 +257,62 @@ void main() {
       expect(r.map((e) => e.total), [400000, 150000]);
     });
 
+    test('chuỗi nhiều tháng: đúng tháng, đúng loại, tháng trống = 0', () async {
+      await add(DateTime(2026, 10, 30), 100000);
+      await add(
+        DateTime(2026, 10, 31),
+        1000000,
+        type: TxType.income,
+        category: 'Lương',
+      );
+      await add(DateTime(2026, 12, 1), 250000);
+      await add(DateTime(2026, 9, 30), 999999); // ngoài khoảng
+      await add(DateTime(2027, 1, 1), 999999); // ngoài khoảng
+      final s = await db.transactionsDao
+          .watchMonthlySeries('2026-10', '2026-12')
+          .first;
+      expect(s.map((e) => e.yearMonth), ['2026-10', '2026-11', '2026-12']);
+      expect(s.map((e) => e.income), [1000000, 0, 0]);
+      expect(s.map((e) => e.expense), [100000, 0, 250000]);
+      expect(s.first.balance, 900000);
+    });
+
+    test('chuỗi nhiều tháng: qua năm, ngược khoảng và sai định dạng', () async {
+      final dao = db.transactionsDao;
+      final r = await dao.watchMonthlySeries('2026-11', '2027-02').first;
+      expect(r.map((e) => e.yearMonth), [
+        '2026-11',
+        '2026-12',
+        '2027-01',
+        '2027-02',
+      ]);
+      expect(await dao.watchMonthlySeries('2026-12', '2026-11').first, isEmpty);
+      expect(
+        () => dao.watchMonthlySeries('2026-13', '2026-12'),
+        throwsArgumentError,
+      );
+      expect(
+        () => dao.watchMonthlySeries('2026/11', '2026-12'),
+        throwsArgumentError,
+      );
+    });
+
+    test(
+      'chuỗi nhiều tháng: stream phát lại khi thêm giao dịch (I5)',
+      () async {
+        final emissions = <int>[];
+        final sub = db.transactionsDao
+            .watchMonthlySeries('2026-11', '2026-11')
+            .listen((s) => emissions.add(s.single.expense));
+        await pumpEventQueue();
+        await add(DateTime(2026, 11, 2), 70000);
+        await pumpEventQueue();
+        await sub.cancel();
+        expect(emissions.first, 0);
+        expect(emissions.last, 70000);
+      },
+    );
+
     test('lịch gom theo ngày với tổng thu và chi', () async {
       await add(DateTime(2026, 11, 7), 40000);
       await add(DateTime(2026, 11, 7), 60000);

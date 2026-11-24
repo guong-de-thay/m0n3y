@@ -47,8 +47,10 @@ outputs/
 # Personal AI Tool Caches / Local Agent Configs (Keep repo clean)
 .agents/
 .claude/
+TASK_*.md
 ANTIGRAVITY.md
 .cache/
 HANDOFF.md
 STUDY_REPORT.md
 TASK_giao-dich-va-lich.md
+graphify-out/

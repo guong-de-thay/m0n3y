@@ -136,3 +136,17 @@ với code/`git log`, tin code và `git log`, rồi sửa mục này.
   thêm vào PATH trước khi chạy lệnh mục 4.
 - Quy trình kết phiên: chạy mục 4, commit theo mục 5, rồi cập nhật mục này.
 - Tiếp tục đúng mạch: `claude -c`; chọn phiên cũ: `claude -r`.
+
+## 10. Kiểm tra kết quả cần render
+
+Với bất kỳ thứ gì chỉ đánh giá đúng khi nhìn kết quả đã render
+(giao diện, đồ thị, sơ đồ, tài liệu, slide, email HTML, v.v.):
+
+- Không kết luận "xong" hay "trông ổn" chỉ dựa trên việc đọc code.
+- Hãy render ra và xem kết quả thực tế bằng công cụ sẵn có
+  (trình duyệt/MCP chụp màn hình, hoặc chuyển sang ảnh rồi đọc ảnh đó).
+- So với yêu cầu ban đầu, tự sửa nếu lệch, rồi xem lại sau khi sửa.
+- Nếu không có cách nào để xem kết quả render, nói rõ là chưa kiểm tra bằng mắt
+  được và nêu điều gì cần người dùng xem giúp. Không đoán.
+- Chỉ áp dụng khi thay đổi ảnh hưởng đến hiển thị. Bỏ qua với thay đổi logic,
+  backend hoặc cấu hình thuần túy, để tiết kiệm token.

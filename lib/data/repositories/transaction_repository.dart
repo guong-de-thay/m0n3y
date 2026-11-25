@@ -47,6 +47,8 @@ class TransactionRepository {
   Stream<MonthTotals> watchMonthTotals(String yearMonth) =>
       _tx.watchMonthTotals(yearMonth);
   Stream<MonthTotals> watchAllTimeTotals() => _tx.watchAllTimeTotals();
+  Stream<MonthTotals> watchTotalsUntil(String yearMonth) =>
+      _tx.watchTotalsUntil(yearMonth);
   Stream<List<MonthlySummary>> watchMonthlySeries(
     String fromYearMonth,
     String toYearMonth,

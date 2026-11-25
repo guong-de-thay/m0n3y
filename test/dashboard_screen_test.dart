@@ -72,7 +72,9 @@ void main() {
       matching: find.text(text),
     );
 
-    testWidgets('KPI và chuyển tháng theo transaction_date', (tester) async {
+    testWidgets('KPI, Visual Notes và chuyển tháng theo transaction_date', (
+      tester,
+    ) async {
       await tester.runAsync(() async {
         await seedTx(DateTime(2026, 10, 1), 10000000, type: TxType.income);
         await seedTx(DateTime(2026, 10, 31), 2000000); // nhập bù tháng 10
@@ -90,6 +92,8 @@ void main() {
       expect(inKpi('kpi_balance', '12.200.000 ₫'), findsOneWidget);
       expect(inKpi('kpi_income', '5.000.000 ₫'), findsOneWidget);
       expect(inKpi('kpi_expense', '800.000 ₫'), findsOneWidget);
+      expect(find.text('Tủ lạnh mới'), findsOneWidget);
+      expect(find.text('-800.000 ₫'), findsOneWidget);
 
       await tester.tap(find.byTooltip('Tháng trước'));
       await flushDb(tester);
@@ -98,6 +102,11 @@ void main() {
       expect(inKpi('kpi_balance', '8.000.000 ₫'), findsOneWidget);
       expect(inKpi('kpi_income', '10.000.000 ₫'), findsOneWidget);
       expect(inKpi('kpi_expense', '2.000.000 ₫'), findsOneWidget);
+      // Khoản 2tr không có ghi chú nên không vào Visual Notes.
+      expect(
+        find.text('Tháng này chưa có ghi chú đáng chú ý nào.'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('Tháng này'));
       await flushDb(tester);
@@ -105,12 +114,15 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('thêm giao dịch thì KPI tự cập nhật (I5)', (tester) async {
+    testWidgets('thêm giao dịch thì KPI và Visual Notes tự cập nhật (I5)', (
+      tester,
+    ) async {
       await tester.runAsync(
         () => seedTx(DateTime(2026, 11, 2), 4000000, type: TxType.income),
       );
       await pumpDashboard(tester);
       expect(inKpi('kpi_balance', '4.000.000 ₫'), findsOneWidget);
+      expect(find.text('Sửa xe máy'), findsNothing);
 
       await tester.runAsync(
         () => seedTx(
@@ -124,10 +136,12 @@ void main() {
 
       expect(inKpi('kpi_balance', '2.500.000 ₫'), findsOneWidget);
       expect(inKpi('kpi_expense', '1.500.000 ₫'), findsOneWidget);
+      expect(find.text('Sửa xe máy'), findsOneWidget);
+      expect(find.text('Chi lớn'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('chưa có dữ liệu: KPI hiện 0 ₫, biểu đồ báo trống', (
+    testWidgets('chưa có dữ liệu: hiện 0 ₫ và các trạng thái rỗng', (
       tester,
     ) async {
       await pumpDashboard(tester);
@@ -136,6 +150,10 @@ void main() {
       expect(find.text('Chưa có giao dịch trong 6 tháng này.'), findsOneWidget);
       expect(
         find.text('Chưa có khoản chi nào trong tháng này.'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Tháng này chưa có ghi chú đáng chú ý nào.'),
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);

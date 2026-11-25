@@ -6,9 +6,10 @@ import '../../../core/utils/year_month.dart';
 import '../providers/dashboard_provider.dart';
 import 'widgets/balance_kpi_cards.dart';
 import 'widgets/cashflow_chart_card.dart';
+import 'widgets/visual_notes_board.dart';
 
-/// Màn hình Tổng quan: bộ chọn tháng, 3 thẻ KPI, biểu đồ cột Thu–Chi và
-/// PieChart cơ cấu chi. Mọi số liệu đi qua Stream (I5).
+/// Màn hình Tổng quan: bộ chọn tháng, 3 thẻ KPI, biểu đồ cột Thu–Chi,
+/// PieChart cơ cấu chi và Visual Notes. Mọi số liệu đi qua Stream (I5).
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
@@ -34,6 +35,8 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: 16),
+          VisualNotesBoard(),
         ],
       ),
     );

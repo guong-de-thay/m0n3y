@@ -59,12 +59,12 @@ Repository này được thiết lập bởi **Hà Tiến Triệu ([@trieuwu](ht
 
 | Hạng mục / Tính năng | Mô tả & Bất biến kỹ thuật | Trạng thái |
 | :--- | :--- | :---: |
-| **Tầng Cơ sở dữ liệu SQLite (Drift ORM)** | Lưu trữ `categories`, `transactions`, `sync_batches`. Tiền tệ bắt buộc lưu kiểu `INTEGER` (VNĐ) để không sai số dấu phẩy động. | `SẼ LÀM` |
-| **Đồng bộ CSV từ iCloud Drive (`CsvSyncService`)** | Đọc `pending_transactions.csv` chuẩn ngày `dd/MM/yyyy`, hỗ trợ lùi ngày (`transaction_date`), tự tạo danh mục mới, xóa trắng file an toàn sau khi commit DB. | `SẼ LÀM` |
+| **Tầng Cơ sở dữ liệu SQLite (Drift ORM)** | Lưu trữ `categories`, `transactions`, `sync_batches`. Tiền tệ bắt buộc lưu kiểu `INTEGER` (VNĐ) để không sai số dấu phẩy động. | `ĐÃ CÓ` |
+| **Đồng bộ CSV từ iCloud Drive (`CsvSyncService`)** | Đọc `pending_transactions.csv` chuẩn ngày `dd/MM/yyyy`, hỗ trợ lùi ngày (`transaction_date`), tự tạo danh mục mới, xóa trắng file an toàn sau khi commit DB. Phần logic đã xong và có test; nút bấm trên giao diện chờ gắn vào khung ứng dụng. | `ĐÃ CÓ` |
 | **Màn hình Tổng quan (`Dashboard`)** | 3 thẻ KPI (Tổng số dư, Thu tháng, Chi tháng), biểu đồ dòng tiền & cơ cấu danh mục (`fl_chart`), bảng **Visual Notes** (chi tiêu lớn + ghi chú gắn dấu `*`). | `SẼ LÀM` |
 | **Màn hình Lịch chi tiêu (`Calendar View`)** | Bố cục 2 panel màn hình ngang: Lưới lịch tháng bên trái hiển thị `+Thu / -Chi` từng ngày + Panel chi tiết giao dịch của ngày đang chọn bên phải. | `SẼ LÀM` |
 | **Màn hình Quản lý Giao dịch (`Transactions`)** | Bảng dữ liệu Desktop, bộ lọc đa chiều (khoảng ngày, danh mục, loại thu/chi, từ khóa ghi chú) và hộp thoại Thêm / Sửa / Xóa giao dịch. | `SẼ LÀM` |
-| **Xuất Báo cáo Excel (`ExcelExportService`)** | Xuất file `.xlsx` tự động tách từng Sheet theo tháng (`MM-YYYY`), có tổng kết Thu - Chi - Dư và chống lỗi CSV/Formula Injection. | `SẼ LÀM` |
+| **Xuất Báo cáo Excel (`ExcelExportService`)** | Xuất file `.xlsx` tự động tách từng Sheet theo tháng (`MM-YYYY`), có tổng kết Thu - Chi - Dư và chống lỗi CSV/Formula Injection. Phần logic đã xong và có test; nút bấm trên giao diện chờ gắn vào khung ứng dụng. | `ĐÃ CÓ` |
 | **Bóc tách Ảnh Hóa đơn từ Điện thoại (OCR/Vision)** | Ném ảnh hóa đơn / màn hình chuyển khoản từ điện thoại lên $\rightarrow$ bóc tách số tiền, ngày giờ, tên quán $\rightarrow$ chuẩn hóa & đẩy vào Database. | `HƯỚNG` |
 
 ---
@@ -74,18 +74,120 @@ Repository này được thiết lập bởi **Hà Tiến Triệu ([@trieuwu](ht
 > **Yêu cầu**: Nhóm phát triển tự vẽ và cập nhật các sơ đồ `mermaid` cùng thuyết minh kiến trúc vào khu vực này theo đúng yêu cầu tại Mục 4 của file [`REQUIREMENTS.md`](REQUIREMENTS.md).
 
 ### 4.1. Sơ đồ Kiến trúc Tổng thể
-`<!-- Nhóm vẽ sơ đồ Mermaid kiến trúc các tầng Presentation - Application/Providers - Domain - Data tại đây -->`
+Dữ liệu đi một chiều: Drift phát lại Stream mỗi khi bảng đổi, các tầng chuyển nó lên đến Widget (đường liền); người dùng thao tác thì lệnh ghi đi xuống từng tầng (đường đứt). Widget không bao giờ chạm trực tiếp vào DAO hay database. `CsvSyncService` đọc file CSV rồi ghi vào database qua `SyncRepository`; `ExcelExportService` nhận dữ liệu từ `ExportController` (lấy qua Repository) và tạo file `.xlsx`.
+
+```mermaid
+flowchart BT
+    DB[("SQLite qua Drift<br/>categories · transactions · sync_batches")]
+    DAO["DAO<br/>TransactionsDao · CategoriesDao"]
+    REPO["Repository<br/>TransactionRepository · SettingsRepository · SyncRepository"]
+    PROV["Riverpod<br/>StreamProvider · SyncController · ExportController"]
+    UI["Desktop UI Widgets<br/>Dashboard · Calendar · Transactions"]
+
+    CSV[/"pending_transactions.csv<br/>(iCloud Drive)"/]
+    SYNC["CsvSyncService"]
+    XSVC["ExcelExportService"]
+    XLSX[/"file .xlsx<br/>mỗi tháng một Sheet MM-YYYY"/]
+
+    DB -->|"watch() Stream"| DAO
+    DAO -->|"Stream"| REPO
+    REPO -->|"Stream"| PROV
+    PROV -->|"AsyncValue"| UI
+
+    UI -.->|"thêm / sửa / xóa"| PROV
+    PROV -.->|"add / update / delete"| REPO
+    REPO -.->|"insert / delete"| DAO
+    DAO -.->|"ghi"| DB
+
+    CSV -->|"đọc"| SYNC
+    SYNC -->|"importRows (một transaction)"| REPO
+    PROV -->|"nút Sync"| SYNC
+    PROV -->|"nút Export"| XSVC
+    XSVC -->|"ghi"| XLSX
+```
 
 ### 4.2. Luồng Hoạt động Người dùng (User Flow) & Luồng Xử lý Dữ liệu (Data Sequence Flow)
-`<!-- Nhóm vẽ sơ đồ Mermaid luồng xử lý đồng bộ CSV, xử lý lỗi/rollback và luồng xuất Excel tại đây -->`
+**Hành trình người dùng, từ lúc chi tiêu trên iPhone đến báo cáo cuối tháng:**
+
+```mermaid
+flowchart LR
+    A["Chi tiêu trên iPhone"] --> B["Ghi một dòng vào<br/>pending_transactions.csv"]
+    B --> C["iCloud tự đưa file về PC"]
+    C --> D["Bấm Sync iCloud CSV"]
+    D --> E{"Dòng hợp lệ?"}
+    E -->|"hợp lệ"| F["Lưu vào SQLite"]
+    E -->|"sai định dạng"| G["Giữ lại trong file<br/>và báo dòng lỗi"]
+    F --> H["Dashboard và Calendar<br/>tự cập nhật"]
+    H --> I["Tra cứu, sửa, xóa<br/>ở bảng Transactions"]
+    I --> H
+    I --> J["Cuối tháng: Export Excel<br/>mỗi tháng một Sheet"]
+```
+
+**Luồng Sync CSV, kể cả khi gặp lỗi.** Điểm cốt lõi là thứ tự: file CSV chỉ được ghi lại sau khi database đã COMMIT.
+
+```mermaid
+sequenceDiagram
+    actor U as Người dùng
+    participant C as SyncController
+    participant S as CsvSyncService
+    participant F as File CSV
+    participant R as SyncRepository
+    participant D as SQLite
+
+    U->>C: Bấm Sync iCloud CSV (chọn file nếu chưa có)
+    C->>S: sync(path)
+    S->>F: kiểm tra tồn tại, tối đa 5 MB, giải mã UTF-8
+    alt file không có, quá lớn, bị khóa hoặc sai UTF-8
+        S-->>C: SyncException (tiếng Việt)
+        C-->>U: SnackBar báo lỗi, file giữ nguyên
+    else đọc được
+        S->>S: parse từng dòng (ngày, loại, danh mục, số tiền, ghi chú)
+        Note over S: dòng sai vào danh sách lỗi, dòng đúng vào danh sách hợp lệ
+        alt không có dòng hợp lệ nào
+            S-->>C: SyncResult 0 dòng kèm danh sách lỗi
+            Note over F: file không bị đổi
+        else có dòng hợp lệ
+            S->>R: importRows(dòng hợp lệ, errorLog)
+            R->>D: BEGIN transaction
+            R->>D: tạo bản ghi sync_batches
+            loop mỗi danh mục chưa gặp
+                R->>D: tìm theo normalized_name và loại, chưa có thì tạo
+            end
+            R->>D: insertMany giao dịch
+            alt database lỗi giữa chừng
+                D-->>R: lỗi, ROLLBACK
+                R-->>S: ném lỗi
+                S-->>C: SyncException
+                Note over F: file CSV giữ nguyên từng byte
+            else thành công
+                R->>D: COMMIT
+                R-->>S: số dòng đã nhập, danh mục mới
+                S->>F: đọc lại file, bỏ đúng các dòng đã nhập, giữ header, dòng lỗi và dòng mới
+                S->>F: ghi file tạm rồi đổi tên
+                S-->>C: SyncResult
+                C-->>U: SnackBar tóm tắt và Xem chi tiết dòng lỗi
+            end
+        end
+    end
+    Note over D,U: Stream của Drift phát lại nên Dashboard, Calendar, Transactions tự cập nhật (I5)
+```
+
+Nếu database đã lưu xong nhưng file CSV bị khóa nên không dọn được, `SyncResult` mang một cảnh báo để người dùng xóa tay các dòng đã nhập, tránh nhập trùng.
 
 ### 4.3. Các Quyết định Kỹ thuật & Bảo mật (Technical Decisions & Security)
 `<!-- Nhóm điền bảng các quyết định kỹ thuật, cách đảm bảo tính nguyên tử (Atomicity) khi đọc/xóa file CSV và các biện pháp bảo mật đã áp dụng -->`
 
 | Quyết định kỹ thuật / Bảo mật | Lý do lựa chọn | Cách kiểm chứng |
 | :--- | :--- | :--- |
-| `<!-- Điền quyết định 1 -->` | `<!-- Vì sao? -->` | `<!-- Test / Lệnh kiểm tra -->` |
-| `<!-- Điền quyết định 2 -->` | `<!-- Vì sao? -->` | `<!-- Test / Lệnh kiểm tra -->` |
+| Tiền là `int` (VNĐ) ở database, model và mọi phép cộng trừ (I1) | Số thực gây sai số dấu phẩy động làm lệch tổng | `database_test.dart` (nhóm I1), `csv_sync_test.dart` (nhóm I1) |
+| Ghi cả lô dòng CSV trong một `db.transaction` (`SyncRepository.importRows`) | Lỗi giữa chừng thì không còn giao dịch nào bị lưu nửa vời | `csv_sync_test.dart`: "DB lỗi → rollback, file CSV giữ nguyên từng byte" |
+| Chỉ dọn file CSV sau khi COMMIT, giữ dòng lỗi, ghi file tạm rồi đổi tên (I2) | Không mất dữ liệu khi lỗi hoặc tắt máy giữa chừng, file không bao giờ ở trạng thái ghi dở | `csv_sync_test.dart` (nhóm I2) |
+| Dọn file bằng cách đọc lại file rồi bỏ đúng các dòng đã nhập | iPhone có thể thêm dòng mới qua iCloud ngay lúc đang sync, không được xóa nhầm | `csv_sync_test.dart`: "dòng iPhone thêm vào giữa lúc sync không bị mất" |
+| Mọi báo cáo, Sheet Excel tính theo `transaction_date`, không theo `created_at` (I3) | Khoản nhập bù cho tháng trước vẫn rơi đúng tháng | `database_test.dart` (nhóm I3), `acceptance_flow_test.dart` (giao dịch 28/10 vào Sheet `10-2026`) |
+| Danh mục khớp qua `normalized_name` (viết thường, cắt khoảng trắng) cộng loại, ràng buộc duy nhất (I4) | "Ăn uống", "ăn uống " và "ĂN UỐNG" là cùng một danh mục, không tạo trùng | `database_test.dart` (nhóm I4), `csv_sync_test.dart` (nhóm I4) |
+| Giao diện nhận dữ liệu qua `Stream` của Drift (`watch()`), không dùng `setState` cho dữ liệu toàn cục (I5) | Màn hình tự cập nhật sau sync, thêm, sửa, xóa, không cần khởi động lại | `database_test.dart` (nhóm I5) |
+| Chống Formula Injection: chuỗi Ghi chú, Danh mục bắt đầu bằng `=`, `+`, `-`, `@`, tab hoặc CR thì thêm `'` ở đầu khi ghi Excel | Excel có thể chạy chuỗi đó như công thức | `excel_export_test.dart` (chống Formula Injection, `sanitize`), `acceptance_flow_test.dart` (`=SUM(A1)` thành `'=SUM(A1)`) |
+| Giới hạn file CSV 5 MB, giải mã UTF-8 chặt, bắt lỗi file khóa hoặc không tồn tại và báo tiếng Việt | App không crash khi gặp file hỏng hoặc quá lớn | `csv_sync_test.dart` (nhóm "Lỗi file - báo tiếng Việt, không crash") |
 
 ---
 

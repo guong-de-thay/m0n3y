@@ -344,5 +344,77 @@ void main() {
       );
       expect(all, isEmpty);
     });
+
+    testWidgets(
+      'xóa giao dịch gặp lỗi: hiện SnackBar tiếng Việt, không crash',
+      (tester) async {
+        final failingContainer = ProviderContainer(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            transactionActionsProvider.overrideWith(
+              (ref) => _FailingDeleteActions(
+                ref.watch(transactionRepositoryProvider),
+              ),
+            ),
+          ],
+        );
+        addTearDown(failingContainer.dispose);
+
+        await tester.runAsync(() async {
+          final repo = failingContainer.read(transactionRepositoryProvider);
+          final catId = await repo.getOrCreateCategory(
+            'Ăn uống',
+            TxType.expense,
+          );
+          await repo.add(
+            NewTransaction(
+              transactionDate: DateTime(2026, 11, 18),
+              type: TxType.expense,
+              categoryId: catId,
+              amount: 45000,
+              note: 'Cà phê lỗi xóa',
+            ),
+          );
+        });
+
+        tester.view.physicalSize = const Size(1400, 900);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(
+          UncontrolledProviderScope(
+            container: failingContainer,
+            child: const MaterialApp(
+              home: Scaffold(body: TransactionsScreen()),
+            ),
+          ),
+        );
+        await flushDb(tester);
+
+        await tester.tap(find.byTooltip('Xóa'));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(
+            of: find.byType(AlertDialog),
+            matching: find.text('Xóa'),
+          ),
+        );
+        await flushDb(tester);
+
+        expect(
+          find.text('Không thể xóa giao dịch. Vui lòng thử lại.'),
+          findsOneWidget,
+        );
+        expect(find.text('Cà phê lỗi xóa'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
+}
+
+class _FailingDeleteActions extends TransactionActions {
+  _FailingDeleteActions(super.repo);
+
+  @override
+  Future<int> delete(int id) async => throw StateError('Lỗi DB giả lập');
 }

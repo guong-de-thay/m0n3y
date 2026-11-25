@@ -108,8 +108,9 @@ sửa trong một PR riêng và chạy lại `build_runner`.
 Đây là bản chụp tiến độ để phiên mới không phải khám phá lại repo. Nếu mâu thuẫn
 với code/`git log`, tin code và `git log`, rồi sửa mục này.
 
-- Nhánh đang làm: `feat/dong-bo-csv-va-excel`
-- **Đã có:**
+- Nhánh đang làm: `docs/cap-nhat-ban-do-du-an` (tách từ `develop`). Nhánh
+  `feat/dong-bo-csv-va-excel` đã gộp qua PR #3 và bị xóa trên remote.
+- **Đã có trên `develop`:**
   - `lib/data/`: schema Drift, `CategoriesDao`, `TransactionsDao`,
     `TransactionRepository`, `SettingsRepository`, `SyncRepository`
     (ghi lô CSV trong một transaction), `mock_data.dart`, `data_providers.dart`.
@@ -121,17 +122,26 @@ với code/`git log`, tin code và `git log`, rồi sửa mục này.
   - `lib/core/`: `year_month.dart`, `default_categories.dart`.
   - `test/`: 77 test pass; `test/fixtures/pending_transactions_nghiem_thu.csv`
     và `acceptance_flow_test.dart` là kịch bản nghiệm thu Sync → Export.
-  - `docs/BAO_CAO_NGHIEM_THU.md` (nhánh `docs/bao-cao-nghiem-thu`, chưa có PR).
-- **Chưa có trong nhánh này:** `core/theme`, `core/widgets`, `features/dashboard`,
+  - `docs/ban-do-du-an.html`: bản đồ dự án cho cả nhóm.
+  - PR #1, #2, #3 đã gộp vào `develop` (PR #3 do PO duyệt).
+  - `docs/BAO_CAO_NGHIEM_THU.md` mới nằm ở nhánh `docs/bao-cao-nghiem-thu`
+    (1 commit, chưa có PR, cần làm mới sau khi PR #3 đã gộp).
+- **Chưa có trên `develop`:** `core/theme`, `core/widgets`, `features/dashboard`,
   `features/transactions`, `features/calendar_view`. Nhánh Tester
   `feat/giao-dich-va-lich` đã có `DesktopShell`, `TopActionBar`, màn Transactions
   (chưa có PR); nhánh PO `feat/dashboard-va-bieu-do` chưa có commit.
   Nút Sync/Export chưa gắn vào UI (`lib/app.dart` chưa truyền callback).
-- **Việc tiếp theo:** (1) PR #3 cần review chéo rồi merge; (2) sau khi PR #3 và PR
-  Transactions vào `develop`, mở PR gắn Sync/Export vào `DesktopShell` và bọc
+- **Việc tiếp theo (Dev):** (1) làm mới báo cáo nghiệm thu rồi mở PR vào `develop`;
+  (2) PR bản đồ dự án (nhánh này); (3) PR README mục 3 và 4 (trạng thái tính năng,
+  3 sơ đồ mermaid, bảng quyết định kỹ thuật); (4) sau khi PR Transactions của Tester
+  vào `develop`, mở PR gắn Sync/Export vào `DesktopShell` và bọc
   `SyncFeedbackListener`/`ExportFeedbackListener` trong `lib/app.dart`;
-  (3) chạy tay Golden Path và điền mục 7 của báo cáo nghiệm thu;
-  (4) cập nhật README mục 3 và 4.
+  (5) chạy tay Golden Path (kể cả mở file xlsx bằng Excel thật) và điền mục 7 của
+  báo cáo nghiệm thu.
+- Nhánh Tester `feat/giao-dich-va-lich` tụt 15 commit so với `develop`, nhánh PO
+  `feat/dashboard-va-bieu-do` tụt 19 commit: cả hai cần gộp `develop` vào trước khi mở PR.
+- Đồng bộ local với remote sau mỗi PR đã gộp: `git fetch --prune`,
+  `git fetch origin develop:develop`, rồi `git branch -d <nhánh đã gộp>`.
 - Chạy `flutter` trên máy này: `D:\flutter\bin` chưa nằm trong PATH của shell,
   thêm vào PATH trước khi chạy lệnh mục 4.
 - Quy trình kết phiên: chạy mục 4, commit theo mục 5, rồi cập nhật mục này.

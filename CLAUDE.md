@@ -108,42 +108,52 @@ sửa trong một PR riêng và chạy lại `build_runner`.
 Đây là bản chụp tiến độ để phiên mới không phải khám phá lại repo. Nếu mâu thuẫn
 với code/`git log`, tin code và `git log`, rồi sửa mục này.
 
-- Nhánh đang làm: `docs/cap-nhat-ban-do-du-an` (tách từ `develop`). Nhánh
-  `feat/dong-bo-csv-va-excel` đã gộp qua PR #3 và bị xóa trên remote.
-- **Đã có trên `develop`:**
+Cập nhật ngày 26/11/2026.
+
+- Nhánh đang làm: `feat/dashboard-va-bieu-do` (PR #12), tách từ
+  `feat/so-du-luy-ke` (PR #11). Dev làm thay phần code Dashboard/Theme/Utils của PO.
+- **Đã có trên `develop`** (đã gộp PR #1–#8 và #10; 99 test):
   - `lib/data/`: schema Drift, `CategoriesDao`, `TransactionsDao`,
     `TransactionRepository`, `SettingsRepository`, `SyncRepository`
     (ghi lô CSV trong một transaction), `mock_data.dart`, `data_providers.dart`.
-    Có thêm `watchMonthlySeries` (tổng Thu/Chi từng tháng, cho biểu đồ cột).
-  - `lib/features/icloud_sync/`: `CsvSyncService`, `SyncController`, `SyncResult`,
-    `SyncFeedbackListener` (SnackBar + Dialog dòng lỗi).
-  - `lib/features/excel_export/`: `ExcelExportService`, `ExportController`
-    (Sheet `MM-YYYY`, chống Formula Injection), `ExportFeedbackListener`.
-  - `lib/core/`: `year_month.dart`, `default_categories.dart`.
-  - `test/`: 77 test pass; `test/fixtures/pending_transactions_nghiem_thu.csv`
-    và `acceptance_flow_test.dart` là kịch bản nghiệm thu Sync → Export.
-  - `docs/ban-do-du-an.html`: bản đồ dự án cho cả nhóm.
-  - PR #1, #2, #3 đã gộp vào `develop` (PR #3 do PO duyệt).
-  - `docs/BAO_CAO_NGHIEM_THU.md` mới nằm ở nhánh `docs/bao-cao-nghiem-thu`
-    (1 commit, chưa có PR, cần làm mới sau khi PR #3 đã gộp).
-- **Chưa có trên `develop`:** `core/theme`, `core/widgets`, `features/dashboard`,
-  `features/transactions`, `features/calendar_view`. Nhánh Tester
-  `feat/giao-dich-va-lich` đã có `DesktopShell`, `TopActionBar`, màn Transactions
-  (chưa có PR); nhánh PO `feat/dashboard-va-bieu-do` chưa có commit.
-  Nút Sync/Export chưa gắn vào UI (`lib/app.dart` chưa truyền callback).
-- **Việc tiếp theo (Dev):** (1) làm mới báo cáo nghiệm thu rồi mở PR vào `develop`;
-  (2) PR bản đồ dự án (nhánh này); (3) PR README mục 3 và 4 (trạng thái tính năng,
-  3 sơ đồ mermaid, bảng quyết định kỹ thuật); (4) sau khi PR Transactions của Tester
-  vào `develop`, mở PR gắn Sync/Export vào `DesktopShell` và bọc
-  `SyncFeedbackListener`/`ExportFeedbackListener` trong `lib/app.dart`;
-  (5) chạy tay Golden Path (kể cả mở file xlsx bằng Excel thật) và điền mục 7 của
-  báo cáo nghiệm thu.
-- Nhánh Tester `feat/giao-dich-va-lich` tụt 15 commit so với `develop`, nhánh PO
-  `feat/dashboard-va-bieu-do` tụt 19 commit: cả hai cần gộp `develop` vào trước khi mở PR.
+  - `lib/features/icloud_sync/`, `lib/features/excel_export/`: service,
+    controller, `SyncFeedbackListener`, `ExportFeedbackListener`.
+  - `lib/core/widgets/`: `DesktopShell`, `TopActionBar` (Tester, PR #8).
+  - `lib/features/transactions/`, `lib/features/calendar_view/` (Tester, PR #8 và
+    PR #10: bắt lỗi xóa, tự đảo khoảng ngày lọc).
+  - CI GitHub Actions (PR #7): format, analyze, test trên Ubuntu cho mọi PR.
+  - Tài liệu: README mục 3 và 4 (3 sơ đồ mermaid, PR #6),
+    `docs/BAO_CAO_NGHIEM_THU.md` (PR #5), `docs/ban-do-du-an.html` (PR #2, #4).
+- **PR đang mở:**
+  - #11 `feat/so-du-luy-ke`: `watchTotalsUntil` (số dư lũy kế đến hết một tháng).
+    Phải gộp trước #12.
+  - #12 `feat/dashboard-va-bieu-do`: `core/theme` (`AppTheme`, `AppColors`),
+    `core/utils/formatters.dart`, màn Dashboard (bộ chọn tháng, 3 KPI, biểu đồ cột,
+    PieChart, Visual Notes), `icloud_sync/presentation/csv_path_dialog.dart`,
+    cập nhật tài liệu; 119 test.
+  - #9 (Tester) `test/csv-edge-cases`: đang ở trạng thái "Changes requested". Fixture CSV
+    bị đổi sang CRLF khi checkout trên Windows nên test đỏ; cần thêm `.gitattributes`
+    (`test/fixtures/*.csv -text`).
+- **Chưa có:** nút Sync/Xuất Excel chưa nối. `lib/app.dart` chưa truyền
+  `onSyncCsv`/`onExportExcel` vào `DesktopShell` và chưa bọc
+  `SyncFeedbackListener`/`ExportFeedbackListener`, nên bấm nút chỉ hiện "Sắp có".
+  `main` mới có tài liệu.
+- **Việc tiếp theo:** (1) review rồi gộp #11, #12, #9; (2) Dev: PR gắn Sync/Export
+  vào `DesktopShell` (sau khi #12 vào `develop`, vì cùng sửa `lib/app.dart`);
+  (3) Tester: chuyển `transaction_formatters.dart` sang `core/utils/formatters.dart`;
+  (4) chạy tay Golden Path (kể cả mở xlsx bằng Excel thật), điền mục 7 báo cáo
+  nghiệm thu và README mục 6; (5) cân nhắc chuẩn hóa `\r\n` thành `\n` trong ghi chú
+  khi sync CSV; (6) PR `develop` → `main`, gắn tag `v1.0.0-mvp`.
 - Đồng bộ local với remote sau mỗi PR đã gộp: `git fetch --prune`,
   `git fetch origin develop:develop`, rồi `git branch -d <nhánh đã gộp>`.
 - Chạy `flutter` trên máy này: `D:\flutter\bin` chưa nằm trong PATH của shell,
-  thêm vào PATH trước khi chạy lệnh mục 4.
+  thêm vào PATH trước khi chạy lệnh mục 4. Máy đã bật Developer Mode và cài
+  workload C++ của Visual Studio, nên `flutter run -d windows` chạy được.
+- Xem giao diện khi không mở được app (mục 10): viết một test tạm. Test này nạp font
+  Roboto và MaterialIcons bằng `FontLoader` từ
+  `<flutter>/bin/cache/artifacts/material_fonts`, chụp `RepaintBoundary.toImage()`
+  ra PNG rồi mở ảnh xem. Đóng DB ở `tearDown`, không đóng trong `runAsync`, vì
+  đóng trong `runAsync` làm test treo. Xóa test tạm, không commit.
 - Quy trình kết phiên: chạy mục 4, commit theo mục 5, rồi cập nhật mục này.
 - Tiếp tục đúng mạch: `claude -c`; chọn phiên cũ: `claude -r`.
 

@@ -6,6 +6,8 @@ import 'app_colors.dart';
 abstract final class AppTheme {
   static ThemeData light() {
     final scheme = ColorScheme.fromSeed(seedColor: AppColors.seed);
+    // Lấy textTheme mặc định để style tùy biến vẫn giữ font của hệ thống.
+    final textTheme = ThemeData(colorScheme: scheme).textTheme;
     final cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
       side: BorderSide(color: scheme.outlineVariant),
@@ -32,11 +34,13 @@ abstract final class AppTheme {
         backgroundColor: scheme.surface,
         indicatorColor: scheme.secondaryContainer,
         minExtendedWidth: 200,
-        selectedLabelTextStyle: TextStyle(
+        selectedLabelTextStyle: textTheme.labelLarge?.copyWith(
           color: scheme.onSurface,
           fontWeight: FontWeight.w600,
         ),
-        unselectedLabelTextStyle: TextStyle(color: scheme.onSurfaceVariant),
+        unselectedLabelTextStyle: textTheme.labelLarge?.copyWith(
+          color: scheme.onSurfaceVariant,
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,

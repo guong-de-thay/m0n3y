@@ -60,11 +60,11 @@ Repository này được thiết lập bởi **Hà Tiến Triệu ([@trieuwu](ht
 | Hạng mục / Tính năng | Mô tả & Bất biến kỹ thuật | Trạng thái |
 | :--- | :--- | :---: |
 | **Tầng Cơ sở dữ liệu SQLite (Drift ORM)** | Lưu trữ `categories`, `transactions`, `sync_batches`. Tiền tệ bắt buộc lưu kiểu `INTEGER` (VNĐ) để không sai số dấu phẩy động. | `ĐÃ CÓ` |
-| **Đồng bộ CSV từ iCloud Drive (`CsvSyncService`)** | Đọc `pending_transactions.csv` chuẩn ngày `dd/MM/yyyy`, hỗ trợ lùi ngày (`transaction_date`), tự tạo danh mục mới, xóa trắng file an toàn sau khi commit DB. Phần logic đã xong và có test; nút bấm trên giao diện chờ gắn vào khung ứng dụng. | `ĐÃ CÓ` |
-| **Màn hình Tổng quan (`Dashboard`)** | 3 thẻ KPI (Tổng số dư, Thu tháng, Chi tháng), biểu đồ dòng tiền & cơ cấu danh mục (`fl_chart`), bảng **Visual Notes** (chi tiêu lớn + ghi chú gắn dấu `*`). | `SẼ LÀM` |
-| **Màn hình Lịch chi tiêu (`Calendar View`)** | Bố cục 2 panel màn hình ngang: Lưới lịch tháng bên trái hiển thị `+Thu / -Chi` từng ngày + Panel chi tiết giao dịch của ngày đang chọn bên phải. | `SẼ LÀM` |
-| **Màn hình Quản lý Giao dịch (`Transactions`)** | Bảng dữ liệu Desktop, bộ lọc đa chiều (khoảng ngày, danh mục, loại thu/chi, từ khóa ghi chú) và hộp thoại Thêm / Sửa / Xóa giao dịch. | `SẼ LÀM` |
-| **Xuất Báo cáo Excel (`ExcelExportService`)** | Xuất file `.xlsx` tự động tách từng Sheet theo tháng (`MM-YYYY`), có tổng kết Thu - Chi - Dư và chống lỗi CSV/Formula Injection. Phần logic đã xong và có test; nút bấm trên giao diện chờ gắn vào khung ứng dụng. | `ĐÃ CÓ` |
+| **Đồng bộ CSV từ iCloud Drive (`CsvSyncService`)** | Đọc `pending_transactions.csv` chuẩn ngày `dd/MM/yyyy`, hỗ trợ lùi ngày (`transaction_date`), tự tạo danh mục mới, xóa trắng file an toàn sau khi commit DB. Đường dẫn file xem và đổi được qua hộp thoại "Cấu hình file CSV" trên Dashboard. Phần logic đã xong và có test; nút "Sync iCloud CSV" trên `TopActionBar` chưa được nối (`lib/app.dart` chưa truyền `onSyncCsv`). | `ĐÃ CÓ` |
+| **Màn hình Tổng quan (`Dashboard`)** | Bộ chọn tháng; 3 thẻ KPI (Số dư lũy kế đến hết tháng đang xem, Thu tháng, Chi tháng); biểu đồ cột Thu–Chi 6 tháng và PieChart cơ cấu chi theo danh mục (`fl_chart`); bảng **Visual Notes** (khoản chi từ 500.000 ₫ có ghi chú, hoặc giao dịch đánh dấu `*`, `!`, `#note`, "Đáng chú ý"). | `ĐÃ CÓ` |
+| **Màn hình Lịch chi tiêu (`Calendar View`)** | Bố cục 2 panel màn hình ngang: Lưới lịch tháng bên trái hiển thị `+Thu / -Chi` từng ngày + Panel chi tiết giao dịch của ngày đang chọn bên phải. | `ĐÃ CÓ` |
+| **Màn hình Quản lý Giao dịch (`Transactions`)** | Bảng dữ liệu Desktop, bộ lọc đa chiều (khoảng ngày tự đảo khi chọn ngược, danh mục, loại thu/chi, từ khóa ghi chú) và hộp thoại Thêm / Sửa / Xóa giao dịch. | `ĐÃ CÓ` |
+| **Xuất Báo cáo Excel (`ExcelExportService`)** | Xuất file `.xlsx` tự động tách từng Sheet theo tháng (`MM-YYYY`), có tổng kết Thu - Chi - Dư và chống lỗi CSV/Formula Injection. Phần logic đã xong và có test; nút "Xuất Excel" trên `TopActionBar` chưa được nối (`lib/app.dart` chưa truyền `onExportExcel`). | `ĐÃ CÓ` |
 | **Bóc tách Ảnh Hóa đơn từ Điện thoại (OCR/Vision)** | Ném ảnh hóa đơn / màn hình chuyển khoản từ điện thoại lên $\rightarrow$ bóc tách số tiền, ngày giờ, tên quán $\rightarrow$ chuẩn hóa & đẩy vào Database. | `HƯỚNG` |
 
 ---
@@ -185,7 +185,9 @@ Nếu database đã lưu xong nhưng file CSV bị khóa nên không dọn đư�
 | Dọn file bằng cách đọc lại file rồi bỏ đúng các dòng đã nhập | iPhone có thể thêm dòng mới qua iCloud ngay lúc đang sync, không được xóa nhầm | `csv_sync_test.dart`: "dòng iPhone thêm vào giữa lúc sync không bị mất" |
 | Mọi báo cáo, Sheet Excel tính theo `transaction_date`, không theo `created_at` (I3) | Khoản nhập bù cho tháng trước vẫn rơi đúng tháng | `database_test.dart` (nhóm I3), `acceptance_flow_test.dart` (giao dịch 28/10 vào Sheet `10-2026`) |
 | Danh mục khớp qua `normalized_name` (viết thường, cắt khoảng trắng) cộng loại, ràng buộc duy nhất (I4) | "Ăn uống", "ăn uống " và "ĂN UỐNG" là cùng một danh mục, không tạo trùng | `database_test.dart` (nhóm I4), `csv_sync_test.dart` (nhóm I4) |
-| Giao diện nhận dữ liệu qua `Stream` của Drift (`watch()`), không dùng `setState` cho dữ liệu toàn cục (I5) | Màn hình tự cập nhật sau sync, thêm, sửa, xóa, không cần khởi động lại | `database_test.dart` (nhóm I5) |
+| Giao diện nhận dữ liệu qua `Stream` của Drift (`watch()`), không dùng `setState` cho dữ liệu toàn cục (I5) | Màn hình tự cập nhật sau sync, thêm, sửa, xóa, không cần khởi động lại | `database_test.dart` (nhóm I5); widget test `transactions_screen_test.dart`, `calendar_screen_test.dart`, `dashboard_screen_test.dart` (thêm/sửa/xóa xong màn hình đổi ngay) |
+| Biểu đồ `fl_chart` cần số `double`: chỉ gọi `toDouble()` đúng lúc đưa vào biểu đồ để vẽ; tổng tiền, số dư và phần trăm vẫn tính bằng `int` (I1) | Thư viện vẽ dùng số thực, nhưng mọi con số hiển thị phải chính xác tuyệt đối | `dashboard_provider_test.dart` (tổng tháng, số dư lũy kế, cơ cấu chi); SUM chạy trong SQLite trên cột INTEGER |
+| Thẻ "Số dư" là số dư lũy kế đến hết tháng đang xem (`watchTotalsUntil`), lọc theo `year_month` (I3) | Lùi về tháng cũ thì thấy đúng số dư tại thời điểm đó, khoản nhập bù vẫn tính đúng tháng | `database_test.dart` ("số dư lũy kế…"), `dashboard_provider_test.dart` |
 | Chống Formula Injection: chuỗi Ghi chú, Danh mục bắt đầu bằng `=`, `+`, `-`, `@`, tab hoặc CR thì thêm `'` ở đầu khi ghi Excel | Excel có thể chạy chuỗi đó như công thức | `excel_export_test.dart` (chống Formula Injection, `sanitize`), `acceptance_flow_test.dart` (`=SUM(A1)` thành `'=SUM(A1)`) |
 | Giới hạn file CSV 5 MB, giải mã UTF-8 chặt, bắt lỗi file khóa hoặc không tồn tại và báo tiếng Việt | App không crash khi gặp file hỏng hoặc quá lớn | `csv_sync_test.dart` (nhóm "Lỗi file - báo tiếng Việt, không crash") |
 
@@ -195,6 +197,11 @@ Nếu database đã lưu xong nhưng file CSV bị khóa nên không dọn đư�
 
 > **Yêu cầu**: Nhóm cập nhật chính xác từng câu lệnh để Khách hàng có thể clone repo về và chạy thử thành công chỉ trong vài bước.
 
+**Chuẩn bị máy Windows (một lần):**
+- Flutter SDK bản stable (nhóm dùng 3.50.1). Kiểm tra bằng `flutter doctor`: mục *Visual Studio - develop Windows apps* phải có dấu ✓.
+- Visual Studio (bản Community là đủ) cài workload **Desktop development with C++**, gồm MSVC build tools x64/x86, C++ CMake tools for Windows và Windows 10/11 SDK. Thiếu workload này thì `flutter run -d windows` không build được.
+- Bật **Developer Mode** trong Windows Settings (`start ms-settings:developers`). Flutter cần quyền tạo symlink để build các plugin.
+
 ```powershell
 # 1. Cài đặt dependencies
 flutter pub get
@@ -202,13 +209,19 @@ flutter pub get
 # 2. Sinh mã nguồn Drift Database (nếu cần)
 dart run build_runner build --delete-conflicting-outputs
 
-# 3. Kiểm tra tĩnh & Chạy bộ kiểm thử tự động
+# 3. Kiểm tra định dạng, kiểm tra tĩnh & chạy bộ kiểm thử tự động
+dart format --output=none --set-exit-if-changed .
 flutter analyze
 flutter test
 
 # 4. Khởi chạy ứng dụng trên Windows Desktop
 flutter run -d windows
+
+# 4b. Chạy kèm dữ liệu mẫu (29 giao dịch tháng 10 và 11/2026) để xem ngay Dashboard, Lịch, Giao dịch
+flutter run -d windows --dart-define=SEED_MOCK=true
 ```
+
+Dữ liệu được lưu trong file `m0n3y.sqlite` ở thư mục dữ liệu ứng dụng của người dùng (AppData). Dữ liệu mẫu chỉ được nạp khi database còn trống.
 
 ---
 

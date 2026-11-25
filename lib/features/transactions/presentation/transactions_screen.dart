@@ -44,11 +44,22 @@ class TransactionsScreen extends ConsumerWidget {
     final confirmed = await showDeleteTransactionDialog(context, item);
     if (confirmed != true) return;
 
-    await ref.read(transactionActionsProvider).delete(item.transaction.id);
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Đã xóa giao dịch.')));
+    try {
+      await ref.read(transactionActionsProvider).delete(item.transaction.id);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('Đã xóa giao dịch.')));
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Không thể xóa giao dịch. Vui lòng thử lại.'),
+          ),
+        );
+    }
   }
 
   @override

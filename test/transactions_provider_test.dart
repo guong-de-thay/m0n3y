@@ -189,6 +189,29 @@ void main() {
       expect(items, hasLength(3));
     });
 
+    test('chọn Từ ngày sau Đến ngày (hoặc ngược lại) sẽ tự đảo lại', () async {
+      final notifier = container.read(transactionFilterProvider.notifier);
+
+      // Chọn to trước rồi chọn from > to -> tự đảo thành from <= to.
+      notifier.setTo(DateTime(2026, 11, 1));
+      notifier.setFrom(DateTime(2026, 11, 10));
+      var filter = container.read(transactionFilterProvider);
+      expect(filter.from, DateTime(2026, 11, 1));
+      expect(filter.to, DateTime(2026, 11, 10));
+
+      var items = await readFiltered();
+      expect(items, hasLength(1));
+      expect(items.single.transaction.note, 'Lương tháng 11');
+
+      // Chọn to < from -> tự đảo thành from <= to.
+      notifier.clear();
+      notifier.setFrom(DateTime(2026, 11, 10));
+      notifier.setTo(DateTime(2026, 11, 1));
+      filter = container.read(transactionFilterProvider);
+      expect(filter.from, DateTime(2026, 11, 1));
+      expect(filter.to, DateTime(2026, 11, 10));
+    });
+
     test(
       'add, update, delete cập nhật stream thời gian thực (I1, I5)',
       () async {

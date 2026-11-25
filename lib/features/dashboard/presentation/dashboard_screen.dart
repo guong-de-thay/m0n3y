@@ -5,9 +5,10 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/utils/year_month.dart';
 import '../providers/dashboard_provider.dart';
 import 'widgets/balance_kpi_cards.dart';
+import 'widgets/cashflow_chart_card.dart';
 
-/// Màn hình Tổng quan: bộ chọn tháng và 3 thẻ KPI.
-/// Mọi số liệu đi qua Stream (I5).
+/// Màn hình Tổng quan: bộ chọn tháng, 3 thẻ KPI, biểu đồ cột Thu–Chi và
+/// PieChart cơ cấu chi. Mọi số liệu đi qua Stream (I5).
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
@@ -17,7 +18,23 @@ class DashboardScreen extends StatelessWidget {
       padding: EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [_DashboardHeader(), SizedBox(height: 16), BalanceKpiCards()],
+        children: [
+          _DashboardHeader(),
+          SizedBox(height: 16),
+          BalanceKpiCards(),
+          SizedBox(height: 16),
+          SizedBox(
+            height: 320,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(flex: 3, child: CashflowBarChartCard()),
+                SizedBox(width: 16),
+                Expanded(flex: 2, child: ExpenseBreakdownCard()),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

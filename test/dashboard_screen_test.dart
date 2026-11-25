@@ -127,10 +127,17 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('chưa có dữ liệu: KPI hiện 0 ₫', (tester) async {
+    testWidgets('chưa có dữ liệu: KPI hiện 0 ₫, biểu đồ báo trống', (
+      tester,
+    ) async {
       await pumpDashboard(tester);
 
       expect(inKpi('kpi_balance', '0 ₫'), findsOneWidget);
+      expect(find.text('Chưa có giao dịch trong 6 tháng này.'), findsOneWidget);
+      expect(
+        find.text('Chưa có khoản chi nào trong tháng này.'),
+        findsOneWidget,
+      );
       expect(tester.takeException(), isNull);
     });
   });

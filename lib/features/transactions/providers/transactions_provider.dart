@@ -12,10 +12,20 @@ class TransactionFilterNotifier extends Notifier<TransactionFilter> {
   TransactionFilter build() => const TransactionFilter();
 
   void setFrom(DateTime? from) {
+    final currentTo = state.to;
+    if (from != null && currentTo != null && from.isAfter(currentTo)) {
+      state = state.copyWith(from: currentTo, to: from);
+      return;
+    }
     state = state.copyWith(from: from);
   }
 
   void setTo(DateTime? to) {
+    final currentFrom = state.from;
+    if (to != null && currentFrom != null && to.isBefore(currentFrom)) {
+      state = state.copyWith(from: to, to: currentFrom);
+      return;
+    }
     state = state.copyWith(to: to);
   }
 

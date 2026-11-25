@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../core/utils/formatters.dart';
 import '../../../core/utils/year_month.dart';
+import '../../icloud_sync/presentation/csv_path_dialog.dart';
 import '../providers/dashboard_provider.dart';
 import 'widgets/balance_kpi_cards.dart';
 import 'widgets/cashflow_chart_card.dart';
@@ -82,6 +83,11 @@ class _DashboardHeader extends ConsumerWidget {
           child: const Text('Tháng này'),
         ),
         const Spacer(),
+        OutlinedButton.icon(
+          onPressed: () => showCsvPathDialog(context),
+          icon: const Icon(Icons.settings_outlined, size: 18),
+          label: const Text('Cấu hình file CSV'),
+        ),
       ],
     );
   }

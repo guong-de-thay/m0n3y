@@ -1,7 +1,7 @@
 # Báo cáo nghiệm thu — phân hệ Dữ liệu & Đồng bộ (Dev)
 
 - **Phạm vi:** `lib/data/**`, `lib/features/icloud_sync/**`, `lib/features/excel_export/**` (PR #3 từ nhánh `feat/dong-bo-csv-va-excel`, đã gộp vào `develop` ở commit 587624e).
-- **Ngày lập:** 24/11/2026. **Cập nhật:** 26/11/2026, sau khi gộp PR #8 và #10 (khung `DesktopShell`, màn Transactions, Calendar) và mở PR #11, #12 (số dư lũy kế, màn Dashboard).
+- **Ngày lập:** 24/11/2026. **Cập nhật:** 26/11/2026, sau khi gộp PR #8 và #10 (khung `DesktopShell`, màn Transactions, Calendar) mở PR #11, #12 (số dư lũy kế, màn Dashboard) và duyệt lại PR #9 (bộ CSV bẫy của Tester).
 - **Cách đọc:** mỗi mục có trạng thái và bằng chứng. `Đạt` = có test tự động hoặc kết quả lệnh ở mục 2. `Chờ tích hợp` = phụ thuộc phần chưa nằm trong `develop` hoặc chưa được nối vào giao diện. `Chưa chạy tay` = chưa kiểm bằng thao tác trên ứng dụng thật.
 
 > Báo cáo này chỉ khẳng định những gì đã chạy được. Đủ 3 màn hình đã có (Dashboard nằm ở PR #12). Riêng hai nút Sync/Export trên giao diện chưa được nối; mục 7 và 9 ghi rõ các bước chưa kiểm.
@@ -64,7 +64,7 @@ Phân bổ test:
 | | `flutter analyze` 0 lỗi, `flutter test` pass | **Đạt** | Mục 2 |
 | 3. Git và điều phối AI (20%) | Conventional Commits tiếng Việt; không `Co-Authored-By` AI; không file rác | **Đạt** | Mục 8 |
 | | Có `CLAUDE.md` / `AGENTS.md` | **Đạt** | Hai file ở thư mục gốc |
-| | Dùng PR template; review chéo | **Đạt** | Mọi PR dùng template. PR #3 do PO duyệt; PR #8, #10 của Tester do Dev duyệt; PR #9 của Tester đang ở trạng thái "Changes requested" (test đỏ trên Windows). Gộp bằng merge commit |
+| | Dùng PR template; review chéo | **Đạt** | Mọi PR dùng template. PR #3 do PO duyệt; PR #8, #10 của Tester do Dev duyệt; PR #9 của Tester bị yêu cầu sửa ngày 25/11 (1 test đỏ trên Windows), Tester thêm `.gitattributes`, Dev duyệt lại và Approve ngày 26/11 (102 test xanh trên bản checkout mới, Windows), chờ Tester gộp. Gộp bằng merge commit |
 | 4. Tài liệu (20%) | README đầy đủ, ≥ 3 sơ đồ mermaid | **Một phần** | README mục 3 (trạng thái), mục 4 (3 sơ đồ mermaid và bảng quyết định kỹ thuật, PR #6), mục 5 (cài đặt, chạy thử) đã có. Mục 6 (nhật ký kiểm thử, hạn chế) còn trống |
 
 ## 4. Bốn quy tắc nghiệp vụ (IMPLEMENTATION_PLAN mục 3)
@@ -128,10 +128,10 @@ Chạy lại ngày 26/11/2026 trên nhánh `feat/dashboard-va-bieu-do` (toàn b�
 
 ## 9. Tồn đọng và rủi ro
 
-1. **PR #11 và #12 chờ review chéo.** Hai PR này (số dư lũy kế, màn Dashboard) do Dev làm thay phần code của PO. Cần một người khác đọc code và chạy thử; gộp #11 trước #12.
+1. **PR #11 và #12 chờ review chéo.** Hai PR này (số dư lũy kế, màn Dashboard) do Dev làm thay phần code của PO. Cần một người khác đọc code và chạy thử; gộp #11 trước #12. PR #9 của Tester đã được Dev duyệt (26/11), chờ Tester gộp.
 2. **Chưa gắn nút vào giao diện.** `lib/app.dart` cần truyền `onSyncCsv` / `onExportExcel` vào `DesktopShell` và bọc `SyncFeedbackListener` / `ExportFeedbackListener`. `DesktopShell` đã có trên `develop`. Việc này nên làm sau khi #12 vào `develop`, vì cả hai cùng sửa `lib/app.dart`.
 3. ~~Dashboard và Calendar chưa có~~: đã có (Calendar ở PR #8, Dashboard ở PR #12). I5 và Visual Notes đã kiểm được ở cả giao diện bằng widget test.
 4. **README** mục 3, 4, 5 đã cập nhật. Mục 6 (nhật ký kiểm thử, hạn chế) còn trống, phần của Tester và PO.
 5. **Chưa kiểm trên Microsoft Excel thật.** Test đọc lại file bằng thư viện `excel`; cần mở bằng Excel để xác nhận `SUM` và ô công thức.
 6. **Ghi chú công thức** (`=SUM(...)`) được lưu nguyên trong DB và chỉ được vô hiệu khi xuất Excel. Nếu sau này có chức năng xuất CSV, cần áp dụng cùng cách xử lý.
-7. **Ghi chú nhiều dòng giữ nguyên `\r\n`.** Parser CSV giữ nguyên ký tự xuống dòng trong ô có ngoặc kép, nên file từ iPhone dùng CRLF sẽ đưa `\r` vào ghi chú. Cần quyết định có chuẩn hóa về `\n` khi sync hay không. PR #9 của Tester đỏ trên Windows cũng vì lý do tương tự (fixture bị checkout thành CRLF); cách sửa là thêm `.gitattributes` (`test/fixtures/*.csv -text`).
+7. **Ghi chú nhiều dòng giữ nguyên `\r\n`.** Parser CSV giữ nguyên ký tự xuống dòng trong ô có ngoặc kép, nên file từ iPhone dùng CRLF sẽ đưa `\r` vào ghi chú. Cần quyết định có chuẩn hóa về `\n` khi sync hay không. PR #9 của Tester từng đỏ trên Windows cũng vì lý do tương tự (fixture bị checkout thành CRLF); đã sửa bằng `.gitattributes` (`test/fixtures/*.csv -text`), fixture giữ LF trên mọi máy. Máy đã checkout fixture từ trước phải xóa `test/fixtures/*.csv` rồi `git checkout -- test/fixtures/`.

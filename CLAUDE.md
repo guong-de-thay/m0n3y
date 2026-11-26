@@ -131,14 +131,17 @@ Cập nhật ngày 26/11/2026.
     `core/utils/formatters.dart`, màn Dashboard (bộ chọn tháng, 3 KPI, biểu đồ cột,
     PieChart, Visual Notes), `icloud_sync/presentation/csv_path_dialog.dart`,
     cập nhật tài liệu; 119 test.
-  - #9 (Tester) `test/csv-edge-cases`: đang ở trạng thái "Changes requested". Fixture CSV
-    bị đổi sang CRLF khi checkout trên Windows nên test đỏ; cần thêm `.gitattributes`
-    (`test/fixtures/*.csv -text`).
+  - #9 (Tester) `test/csv-edge-cases`: Dev đã Approve (26/11), chờ Tester gộp. Tester đã
+    thêm `.gitattributes` (`test/fixtures/*.csv -text`) để fixture giữ LF khi checkout
+    trên Windows; bản checkout mới chạy 102 test xanh. Sau khi #9 vào `develop`, ai đã
+    checkout fixture từ trước (như `pending_transactions_nghiem_thu.csv`, đang CRLF)
+    phải xóa `test/fixtures/*.csv` rồi `git checkout -- test/fixtures/`, nếu không Git
+    báo file đã sửa.
 - **Chưa có:** nút Sync/Xuất Excel chưa nối. `lib/app.dart` chưa truyền
   `onSyncCsv`/`onExportExcel` vào `DesktopShell` và chưa bọc
   `SyncFeedbackListener`/`ExportFeedbackListener`, nên bấm nút chỉ hiện "Sắp có".
   `main` mới có tài liệu.
-- **Việc tiếp theo:** (1) review rồi gộp #11, #12, #9; (2) Dev: PR gắn Sync/Export
+- **Việc tiếp theo:** (1) review rồi gộp #11, #12; Tester gộp #9; (2) Dev: PR gắn Sync/Export
   vào `DesktopShell` (sau khi #12 vào `develop`, vì cùng sửa `lib/app.dart`);
   (3) Tester: chuyển `transaction_formatters.dart` sang `core/utils/formatters.dart`;
   (4) chạy tay Golden Path (kể cả mở xlsx bằng Excel thật), điền mục 7 báo cáo

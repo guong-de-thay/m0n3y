@@ -120,7 +120,7 @@ a { color: var(--dev); }
   <div class="eyebrow">m0n3y · develop và các PR đang mở · 26/11/2026</div>
   <h1>Bản đồ dự án m0n3y</h1>
   <p class="lead">m0n3y là app quản lý thu chi cá nhân chạy trên Windows. Mọi dữ liệu nằm trong một file SQLite trên máy. Điện thoại ghi chi tiêu vào một file CSV trên iCloud, app đọc file đó vào database, rồi hiển thị lại bằng Dashboard, Lịch và Bảng giao dịch, và xuất ra Excel khi cần.</p>
-  <p class="lead">Trang này giải thích từng phần tử đang có trong repo, phần nào đã làm xong, phần nào còn trống và của ai. Tình trạng tính tới 26/11/2026: PR #1 đến #8 và #10 đã gộp vào <code>develop</code>; PR #9, #11, #12 đang chờ review. Cả 3 màn hình đã có code; chỉ còn hai nút Sync và Xuất Excel chưa được nối.</p>
+  <p class="lead">Trang này giải thích từng phần tử đang có trong repo, phần nào đã làm xong, phần nào còn trống và của ai. Tình trạng tính tới 26/11/2026: PR #1 đến #8 và #10 đã gộp vào <code>develop</code>; PR #9 đã được duyệt và chờ gộp; PR #11, #12 đang chờ review. Cả 3 màn hình đã có code; chỉ còn hai nút Sync và Xuất Excel chưa được nối.</p>
   <div class="legend">
     <span><span class="sw done"></span>đã có trên <code>develop</code></span>
     <span><span class="sw wip"></span>đã có PR, đang chờ review để vào <code>develop</code></span>
@@ -205,10 +205,10 @@ a { color: var(--dev); }
 
 <section>
   <h2>2. Các nhánh git và ai giữ nhánh nào</h2>
-  <p>Đã gộp 9 PR vào <code>develop</code>: Sync CSV và xuất Excel của Dev (#3), khung app cùng màn Giao dịch và Lịch của Tester (#8, #10), CI (#7) và các PR tài liệu. Nhánh <code>main</code> vẫn dừng ở commit README và chưa nhận gì từ <code>develop</code>. Ba PR đang chờ review; PR #12 (Dashboard) nối tiếp PR #11 nên phải gộp #11 trước.</p>
+  <p>Đã gộp 9 PR vào <code>develop</code>: Sync CSV và xuất Excel của Dev (#3), khung app cùng màn Giao dịch và Lịch của Tester (#8, #10), CI (#7) và các PR tài liệu. Nhánh <code>main</code> vẫn dừng ở commit README và chưa nhận gì từ <code>develop</code>. PR #9 của Tester đã được duyệt, chờ gộp. Hai PR còn lại chờ review; PR #12 (Dashboard) nối tiếp PR #11 nên phải gộp #11 trước.</p>
   <figure>
     <div class="scroll">
-    <svg viewBox="0 0 1060 400" role="img" aria-label="Nhánh main có 4 commit tài liệu. Nhánh develop tách từ main với 9 mốc, ba mốc cuối là PR số 7 CI, PR số 8 khung app cùng hai màn hình của Tester, PR số 10 sửa bộ lọc. Từ đầu develop có ba nhánh đang chờ review: test csv-edge-cases của Tester (PR số 9, cần sửa), feat so-du-luy-ke của Dev (PR số 11), và feat dashboard-va-bieu-do nối tiếp từ nhánh so-du-luy-ke (PR số 12, phần của PO do Dev viết).">
+    <svg viewBox="0 0 1060 400" role="img" aria-label="Nhánh main có 4 commit tài liệu. Nhánh develop tách từ main với 9 mốc, ba mốc cuối là PR số 7 CI, PR số 8 khung app cùng hai màn hình của Tester, PR số 10 sửa bộ lọc. Từ đầu develop có ba nhánh đang mở: test csv-edge-cases của Tester (PR số 9, đã duyệt, chờ gộp), feat so-du-luy-ke của Dev (PR số 11), và feat dashboard-va-bieu-do nối tiếp từ nhánh so-du-luy-ke (PR số 12, phần của PO do Dev viết).">
       <text x="10" y="54" class="m">main</text>
       <line class="ln" x1="70" y1="50" x2="250" y2="50" style="stroke-width:2.4"/>
       <circle class="main n" cx="70" cy="50" r="6"/><circle class="main n" cx="130" cy="50" r="6"/><circle class="main n" cx="190" cy="50" r="6"/><circle class="main n" cx="250" cy="50" r="6"/>
@@ -230,11 +230,11 @@ a { color: var(--dev); }
       <text class="l" x="724" y="172" text-anchor="middle">PR #8</text><text class="l" x="724" y="185" text-anchor="middle">khung, 2 màn</text>
       <text class="l" x="786" y="172" text-anchor="middle">PR #10</text><text class="l" x="786" y="185" text-anchor="middle">sửa lọc</text>
 
-      <!-- nhánh đang chờ review -->
+      <!-- nhánh đang mở -->
       <path class="br tester" d="M786 150 L 812 150 C 828 150, 828 235, 844 235"/>
       <circle class="n tester" style="fill:var(--tester)" cx="844" cy="235" r="6"/>
       <text class="m" x="860" y="232">test/csv-edge-cases</text>
-      <text class="s" x="860" y="248" style="fill:var(--tester)">Tester · PR #9 · cần sửa (CRLF)</text>
+      <text class="s" x="860" y="248" style="fill:var(--tester)">Tester · PR #9 · đã duyệt, chờ gộp</text>
 
       <path class="br" style="stroke:var(--dev)" d="M786 150 L 812 150 C 828 150, 828 295, 844 295"/>
       <circle class="dev n" cx="844" cy="295" r="6"/>
@@ -245,7 +245,7 @@ a { color: var(--dev); }
       <circle class="n po" style="fill:var(--po)" cx="844" cy="355" r="6"/>
       <text class="m" x="860" y="352">feat/dashboard-va-bieu-do</text>
       <text class="s" x="860" y="368" style="fill:var(--po)">PO (Dev viết) · PR #12 · chờ review</text>
-      <text class="s" x="860" y="383">nối tiếp #11 · 14 commit</text>
+      <text class="s" x="860" y="383">nối tiếp #11 · 17 commit</text>
     </svg>
     </div>
     <figcaption>Chấm xanh là commit của Dev, chấm hồng là PR của Tester. Các nhánh đã gộp (<code>feat/dong-bo-csv-va-excel</code>, <code>feat/giao-dich-va-lich</code>, <code>fix/bo-loc-ngay-va-xoa-giao-dich</code>, các nhánh <code>docs/…</code>) không còn trên GitHub. Nhánh <code>feat/dashboard-va-bieu-do</code> được tách từ <code>feat/so-du-luy-ke</code>, vì thẻ "Số dư" cần hàm mới ở tầng dữ liệu. Thứ tự theo quy chế: nhánh tính năng, mở PR vào <code>develop</code>, một người khác duyệt rồi mới gộp. <code>main</code> chỉ nhận từ <code>develop</code> khi bàn giao.</figcaption>
@@ -316,7 +316,7 @@ a { color: var(--dev); }
       <tr><td>test/acceptance_flow_test.dart</td><td>Kịch bản nghiệm thu: Sync file CSV mẫu rồi Export. Dùng <code>test/fixtures/pending_transactions_nghiem_thu.csv</code>.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/transactions_*_test.dart</td><td>16 test cho màn Giao dịch: bộ lọc, tự đảo khoảng ngày, thêm/sửa/xóa cập nhật bảng ngay (I5), xóa lỗi không crash.</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/calendar_*_test.dart</td><td>6 test cho màn Lịch: chuyển tháng, gom theo <code>transaction_date</code> (I3), tổng bằng số nguyên, tự cập nhật (I5).</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có</td></tr>
-      <tr><td>test/csv_edge_cases_qa_test.dart</td><td>3 test với bộ CSV bẫy: BOM, dấu <code>;</code>, ghi chú nhiều dòng, formula injection, 9 dòng lỗi được giữ lại. Đang đỏ trên Windows vì fixture bị đổi sang CRLF khi checkout.</td><td><span class="chip tester">Tester</span></td><td class="st wip">PR #9, cần sửa</td></tr>
+      <tr><td>test/csv_edge_cases_qa_test.dart</td><td>3 test với bộ CSV bẫy: BOM, dấu <code>;</code>, ghi chú nhiều dòng, formula injection, 9 dòng lỗi được giữ lại. Từng đỏ trên Windows vì fixture bị đổi sang CRLF khi checkout; đã sửa bằng <code>.gitattributes</code>.</td><td><span class="chip tester">Tester</span></td><td class="st wip">PR #9, đã duyệt</td></tr>
       <tr><td>test/formatters_test.dart</td><td>6 test định dạng tiền, ngày, tháng và cộng tháng qua năm.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
       <tr><td>test/dashboard_*_test.dart</td><td>9 test cho Dashboard: tháng đang xem, tổng tháng và số dư lũy kế có khoản nhập bù (I3), chuỗi 6 tháng, cơ cấu chi, Visual Notes, KPI tự đổi khi thêm giao dịch (I5), trạng thái rỗng.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
       <tr><td>test/csv_path_dialog_test.dart</td><td>3 test cho hộp thoại cấu hình file CSV: chọn, bỏ đường dẫn, hủy chọn, cảnh báo file không tồn tại.</td><td><span class="chip dev">Dev</span></td><td class="st wip">PR #12</td></tr>
@@ -406,7 +406,7 @@ a { color: var(--dev); }
   <h2>8. Còn thiếu gì và ai làm</h2>
   <div class="gl">
     <div><h3><span class="chip dev">Dev</span> Sync, Excel: xong · nối nút: chưa</h3><p>Đã mở PR #11 (số dư lũy kế) và PR #12 (Dashboard, theme, formatter, hộp thoại file CSV), viết thay phần code của PO; cả hai chờ review, gộp #11 trước. Việc kế tiếp: sau khi #12 vào <code>develop</code>, mở PR nối nút Sync và Xuất Excel vào <code>DesktopShell</code> và bọc hai bộ lắng nghe trong <code>app.dart</code>; chạy tay Golden Path (kể cả mở file xlsx bằng Excel thật) để điền mục 7 báo cáo nghiệm thu; quyết định có chuẩn hóa <code>\r\n</code> trong ghi chú CSV hay không.</p></div>
-    <div><h3><span class="chip tester">Tester</span> Khung app, Giao dịch, Lịch: xong</h3><p><code>DesktopShell</code>, <code>TopActionBar</code>, màn Giao dịch và màn Lịch đã vào <code>develop</code> (PR #8, #10). Việc kế tiếp: sửa PR #9 bằng cách thêm <code>.gitattributes</code> (<code>test/fixtures/*.csv -text</code>) để test xanh trên Windows; review chéo PR #11 và #12; chuyển <code>transaction_formatters.dart</code> sang <code>core/utils/formatters.dart</code>; điền README mục 6.1 (kết quả kiểm thử).</p></div>
+    <div><h3><span class="chip tester">Tester</span> Khung app, Giao dịch, Lịch: xong</h3><p><code>DesktopShell</code>, <code>TopActionBar</code>, màn Giao dịch và màn Lịch đã vào <code>develop</code> (PR #8, #10). Việc kế tiếp: gộp PR #9 (Dev đã duyệt sau khi thêm <code>.gitattributes</code>, test xanh trên Windows); review chéo PR #11 và #12; chuyển <code>transaction_formatters.dart</code> sang <code>core/utils/formatters.dart</code>; điền README mục 6.1 (kết quả kiểm thử).</p></div>
     <div><h3><span class="chip po">PO</span> Theme, Dashboard: chờ review</h3><p>Code của phần này nằm ở PR #12 (Dev viết thay). Việc kế tiếp: đọc và chạy thử PR #12; chốt Golden Path và kịch bản demo với mentor; điền README mục 6.2 (hạn chế và hướng cải tiến).</p></div>
   </div>
 </section>

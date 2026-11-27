@@ -163,6 +163,14 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   /// Tổng thu/chi toàn thời gian (số dư = thu - chi).
   Stream<MonthTotals> watchAllTimeTotals() => _watchTotals();
 
+  /// Tổng thu/chi lũy kế từ đầu đến hết tháng [yearMonth] (`YYYY-MM`), cho thẻ
+  /// "Số dư" trên Dashboard. Lọc theo `year_month` (I3), SUM trên INTEGER (I1).
+  Stream<MonthTotals> watchTotalsUntil(String yearMonth) {
+    return _watchTotals(
+      where: transactions.yearMonth.isSmallerOrEqualValue(yearMonth),
+    );
+  }
+
   /// Tổng thu/chi từng tháng trong khoảng [fromYm]..[toYm] (cả hai đầu, dạng
   /// `YYYY-MM`), cũ → mới, cho biểu đồ cột Thu–Chi. Tháng không có giao dịch
   /// vẫn được trả về với 0 để trục thời gian liên tục. Gom theo `year_month`

@@ -27,10 +27,16 @@ Dữ liệu có sẵn để dựng UI (không cần tự viết lại):
   `categoriesProvider`, `settingsRepositoryProvider`).
 - Repository: `lib/data/repositories/transaction_repository.dart`
   (`watchFiltered`, `watchDailyCashflow`, `watchMonthTotals`, `watchAllTimeTotals`,
-  `watchCategoryBreakdown`, `watchVisualNotes`, `add/update/delete`).
+  `watchTotalsUntil`, `watchMonthlySeries`, `watchCategoryBreakdown`,
+  `watchVisualNotes`, `add/update/delete`).
 - Model: `lib/data/models/transaction_models.dart`.
-- Hằng số: `lib/core/constants/default_categories.dart`; tiện ích ngày:
-  `lib/core/utils/year_month.dart`.
+- Hằng số: `lib/core/constants/default_categories.dart` (kể cả
+  `notableAmountThreshold`); tiện ích ngày: `lib/core/utils/year_month.dart`
+  (`yearMonthOf`, `dateOnly`, `firstDayOfMonth`, `addMonths`).
+- Định dạng hiển thị: `lib/core/utils/formatters.dart` (`formatVnd` → `1.250.000 ₫`,
+  `formatVndCompact`, `formatDate` → `dd/MM/yyyy`, `formatMonthLabel` → `MM/YYYY`).
+- Màu và theme: `lib/core/theme/app_colors.dart` (Thu, Chi, đáng chú ý),
+  `lib/core/theme/app_theme.dart`.
 
 ## 2. Bất biến dữ liệu (không được vi phạm)
 

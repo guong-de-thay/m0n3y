@@ -245,6 +245,59 @@ void main() {
       },
     );
 
+    test('số dư lũy kế chỉ cộng đến hết tháng được chọn (I1, I3)', () async {
+      await add(DateTime(2026, 9, 30), 10000000, type: TxType.income);
+      await add(DateTime(2026, 10, 5), 2000000);
+      // Nhập bù sau, nhưng transaction_date thuộc tháng 10 -> vẫn tính vào 10.
+      await add(DateTime(2026, 10, 31), 500000);
+      await add(DateTime(2026, 11, 1), 3000000);
+      await add(DateTime(2026, 11, 2), 4000000, type: TxType.income);
+
+      final untilSep = await db.transactionsDao
+          .watchTotalsUntil('2026-09')
+          .first;
+      expect(untilSep.income, 10000000);
+      expect(untilSep.expense, 0);
+
+      final untilOct = await db.transactionsDao
+          .watchTotalsUntil('2026-10')
+          .first;
+      expect(untilOct.income, 10000000);
+      expect(untilOct.expense, 2500000);
+      expect(untilOct.balance, 7500000);
+
+      // Trước mọi giao dịch: 0.
+      final untilAug = await db.transactionsDao
+          .watchTotalsUntil('2026-08')
+          .first;
+      expect(untilAug.balance, 0);
+
+      // Từ tháng mới nhất trở đi: bằng tổng toàn thời gian.
+      final allTime = await db.transactionsDao.watchAllTimeTotals().first;
+      for (final ym in ['2026-11', '2027-01']) {
+        final until = await db.transactionsDao.watchTotalsUntil(ym).first;
+        expect(until.income, allTime.income);
+        expect(until.expense, allTime.expense);
+      }
+      expect(allTime.balance, 8500000);
+    });
+
+    test('số dư lũy kế tự cập nhật khi thêm giao dịch (I5)', () async {
+      final emitted = <int>[];
+      final sub = db.transactionsDao
+          .watchTotalsUntil('2026-11')
+          .listen((t) => emitted.add(t.balance));
+      await pumpEventQueue();
+      await add(DateTime(2026, 11, 3), 1000000, type: TxType.income);
+      await pumpEventQueue();
+      // Giao dịch tháng sau không làm đổi số dư lũy kế đến 11/2026.
+      await add(DateTime(2026, 12, 1), 300000);
+      await pumpEventQueue();
+      await sub.cancel();
+      expect(emitted.first, 0);
+      expect(emitted.last, 1000000);
+    });
+
     test('cơ cấu danh mục chỉ cộng đúng loại và tháng, lớn → nhỏ', () async {
       await add(DateTime(2026, 11, 1), 100000, category: 'Ăn uống');
       await add(DateTime(2026, 11, 2), 50000, category: 'Ăn uống');

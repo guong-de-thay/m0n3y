@@ -117,14 +117,14 @@ a { color: var(--dev); }
 
 <main>
 <header>
-  <div class="eyebrow">m0n3y · nhánh develop · 24/11/2026</div>
+  <div class="eyebrow">m0n3y · develop và các PR đang mở · 26/11/2026</div>
   <h1>Bản đồ dự án m0n3y</h1>
   <p class="lead">m0n3y là app quản lý thu chi cá nhân chạy trên Windows. Mọi dữ liệu nằm trong một file SQLite trên máy. Điện thoại ghi chi tiêu vào một file CSV trên iCloud, app đọc file đó vào database, rồi hiển thị lại bằng Dashboard, Lịch và Bảng giao dịch, và xuất ra Excel khi cần.</p>
-  <p class="lead">Trang này giải thích từng phần tử đang có trong repo, phần nào đã làm xong, phần nào còn trống và của ai. Tình trạng tính tới lúc PR #3 (Sync CSV và xuất Excel) đã gộp vào <code>develop</code>.</p>
+  <p class="lead">Trang này giải thích từng phần tử đang có trong repo, phần nào đã làm xong, phần nào còn trống và của ai. Tình trạng tính tới 26/11/2026: PR #1 đến #8 và #10 đã gộp vào <code>develop</code>; PR #9 đã được duyệt và chờ gộp; PR #11, #12 đang chờ review. Cả 3 màn hình đã có code; chỉ còn hai nút Sync và Xuất Excel chưa được nối.</p>
   <div class="legend">
     <span><span class="sw done"></span>đã có trên <code>develop</code></span>
-    <span><span class="sw wip"></span>đã viết ở nhánh riêng, chưa có PR vào <code>develop</code></span>
-    <span><span class="sw todo"></span>chưa làm (thư mục còn rỗng)</span>
+    <span><span class="sw wip"></span>đã có PR, đang chờ review để vào <code>develop</code></span>
+    <span><span class="sw todo"></span>chưa làm hoặc chưa nối</span>
     <span><span class="chip po">PO</span> Nguyễn Tú Anh</span>
     <span><span class="chip dev">Dev</span> Phùng Hải Đăng</span>
     <span><span class="chip tester">Tester</span> Đàm Thuận Khải</span>
@@ -136,16 +136,16 @@ a { color: var(--dev); }
   <p>Đây là xương sống của dự án. Dữ liệu đi lên một chiều từ database tới màn hình, và đi xuống một chiều khi người dùng thêm, sửa, xóa. Màn hình không bao giờ chạm trực tiếp vào database.</p>
   <figure>
     <div class="scroll">
-    <svg viewBox="0 0 800 500" role="img" aria-label="Năm tầng xếp dọc từ SQLite lên Widget. Tầng dưới cùng và ba tầng giữa đã có, tầng Widget chưa có trên develop. CsvSyncService đọc file CSV rồi ghi vào Repository, ExcelExportService đọc từ Repository và tạo file xlsx, cả hai đã làm xong.">
+    <svg viewBox="0 0 800 500" role="img" aria-label="Năm tầng xếp dọc từ SQLite lên Widget. Cả năm tầng đã có: Calendar và Transactions trên develop, Dashboard ở PR số 12. CsvSyncService đọc file CSV rồi ghi vào Repository, ExcelExportService đọc từ Repository và tạo file xlsx, cả hai đã làm xong nhưng nút bấm trên giao diện chưa được nối.">
       <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
 
-      <rect class="b todo" x="260" y="20" width="300" height="56" rx="8"/>
+      <rect class="b done" x="260" y="20" width="300" height="56" rx="8"/>
       <text x="410" y="44" text-anchor="middle">Widget (màn hình)</text>
-      <text class="s" x="410" y="62" text-anchor="middle">Dashboard · Calendar · Transactions</text>
+      <text class="s" x="410" y="62" text-anchor="middle">Calendar · Transactions · Dashboard (PR #12)</text>
 
       <rect class="b done" x="260" y="110" width="300" height="56" rx="8"/>
       <text x="410" y="134" text-anchor="middle">Provider Riverpod</text>
-      <text class="s" x="410" y="152" text-anchor="middle">repository · categories · điều khiển Sync / Export</text>
+      <text class="s" x="410" y="152" text-anchor="middle">bộ lọc · lịch · dashboard · Sync / Export</text>
 
       <rect class="b done" x="260" y="200" width="300" height="56" rx="8"/>
       <text x="410" y="224" text-anchor="middle">Repository</text>
@@ -199,16 +199,16 @@ a { color: var(--dev); }
       <line class="ln" x1="715" y1="256" x2="715" y2="288" marker-end="url(#a1)"/>
     </svg>
     </div>
-    <figcaption>Mũi tên đi lên là dữ liệu tự cập nhật: khi bảng thay đổi, Drift phát lại danh sách mới (một <em>Stream</em>) và màn hình vẽ lại, không cần tải lại thủ công. Sync CSV đi qua <code>SyncRepository</code> và ghi cả lô dòng trong một transaction. Xuất Excel đọc qua Repository. Hai nút Sync và Export có controller Riverpod sẵn, nhưng ô Widget vẫn trống trên <code>develop</code> nên chưa có nút nào để bấm.</figcaption>
+    <figcaption>Mũi tên đi lên là dữ liệu tự cập nhật: khi bảng thay đổi, Drift phát lại danh sách mới (một <em>Stream</em>) và màn hình vẽ lại, không cần tải lại thủ công. Sync CSV đi qua <code>SyncRepository</code> và ghi cả lô dòng trong một transaction. Xuất Excel đọc qua Repository. Hai nút Sync và Xuất Excel đã nằm trên <code>TopActionBar</code> và có controller Riverpod sẵn, nhưng <code>lib/app.dart</code> chưa nối hai thứ với nhau, nên bấm nút chỉ hiện "Sắp có".</figcaption>
   </figure>
 </section>
 
 <section>
   <h2>2. Các nhánh git và ai giữ nhánh nào</h2>
-  <p>Ba PR đầu đã gộp vào <code>develop</code>: hai PR tài liệu và PR #3 của Dev (Sync CSV, xuất Excel). Nhánh <code>main</code> vẫn dừng ở commit README và chưa nhận gì từ <code>develop</code>. Ba nhánh còn lại chưa có PR, và đều tụt sau <code>develop</code> nên phải gộp <code>develop</code> vào trước khi mở PR.</p>
+  <p>Đã gộp 9 PR vào <code>develop</code>: Sync CSV và xuất Excel của Dev (#3), khung app cùng màn Giao dịch và Lịch của Tester (#8, #10), CI (#7) và các PR tài liệu. Nhánh <code>main</code> vẫn dừng ở commit README và chưa nhận gì từ <code>develop</code>. PR #9 của Tester đã được duyệt, chờ gộp. Hai PR còn lại chờ review; PR #12 (Dashboard) nối tiếp PR #11 nên phải gộp #11 trước.</p>
   <figure>
     <div class="scroll">
-    <svg viewBox="0 0 1040 400" role="img" aria-label="Nhánh main có 4 commit tài liệu. Nhánh develop tách từ main với 7 mốc, mốc cuối là PR số 3 gộp Sync CSV và xuất Excel. Từ đầu develop có bốn nhánh chưa có PR: nhánh Dashboard của PO chưa có commit, nhánh Giao dịch và Lịch của Tester có 2 commit, nhánh báo cáo nghiệm thu của Dev có 1 commit, nhánh sync của Dev đã gộp xong.">
+    <svg viewBox="0 0 1060 400" role="img" aria-label="Nhánh main có 4 commit tài liệu. Nhánh develop tách từ main với 9 mốc, ba mốc cuối là PR số 7 CI, PR số 8 khung app cùng hai màn hình của Tester, PR số 10 sửa bộ lọc. Từ đầu develop có ba nhánh đang mở: test csv-edge-cases của Tester (PR số 9, đã duyệt, chờ gộp), feat so-du-luy-ke của Dev (PR số 11), và feat dashboard-va-bieu-do nối tiếp từ nhánh so-du-luy-ke (PR số 12, phần của PO do Dev viết).">
       <text x="10" y="54" class="m">main</text>
       <line class="ln" x1="70" y1="50" x2="250" y2="50" style="stroke-width:2.4"/>
       <circle class="main n" cx="70" cy="50" r="6"/><circle class="main n" cx="130" cy="50" r="6"/><circle class="main n" cx="190" cy="50" r="6"/><circle class="main n" cx="250" cy="50" r="6"/>
@@ -217,36 +217,38 @@ a { color: var(--dev); }
       <text class="l" x="190" y="72" text-anchor="middle">quy chế</text>
       <text class="l" x="250" y="72" text-anchor="middle">README</text>
 
-      <path class="br" style="stroke:var(--dev)" d="M250 50 C 270 50, 270 150, 290 150 L 720 150"/>
+      <path class="br" style="stroke:var(--dev)" d="M250 50 C 270 50, 270 150, 290 150 L 786 150"/>
       <text x="294" y="128" class="m" style="fill:var(--dev)">develop</text>
-      <circle class="dev n" cx="290" cy="150" r="6"/><circle class="dev n" cx="362" cy="150" r="6"/><circle class="dev n" cx="434" cy="150" r="6"/><circle class="dev n" cx="506" cy="150" r="6"/><circle class="dev n" cx="578" cy="150" r="6"/><circle class="dev n" cx="650" cy="150" r="6"/><circle class="dev n" cx="722" cy="150" r="6"/>
+      <circle class="dev n" cx="290" cy="150" r="6"/><circle class="dev n" cx="352" cy="150" r="6"/><circle class="dev n" cx="414" cy="150" r="6"/><circle class="dev n" cx="476" cy="150" r="6"/><circle class="dev n" cx="538" cy="150" r="6"/><circle class="dev n" cx="600" cy="150" r="6"/><circle class="dev n" cx="662" cy="150" r="6"/><circle class="n tester" style="fill:var(--tester)" cx="724" cy="150" r="6"/><circle class="n tester" style="fill:var(--tester)" cx="786" cy="150" r="6"/>
       <text class="l" x="290" y="172" text-anchor="middle">khung</text>
-      <text class="l" x="362" y="172" text-anchor="middle">schema + DAO</text>
-      <text class="l" x="434" y="172" text-anchor="middle">repo + provider</text>
-      <text class="l" x="506" y="172" text-anchor="middle">kiểm thử</text>
-      <text class="l" x="578" y="172" text-anchor="middle">CLAUDE.md</text>
-      <text class="l" x="650" y="172" text-anchor="middle">PR #1, #2</text><text class="l" x="650" y="185" text-anchor="middle">tài liệu</text>
-      <text class="l" x="722" y="172" text-anchor="middle">PR #3</text><text class="l" x="722" y="185" text-anchor="middle">sync + Excel</text>
+      <text class="l" x="352" y="172" text-anchor="middle">schema</text><text class="l" x="352" y="185" text-anchor="middle">DAO</text>
+      <text class="l" x="414" y="172" text-anchor="middle">repo</text><text class="l" x="414" y="185" text-anchor="middle">provider</text>
+      <text class="l" x="476" y="172" text-anchor="middle">kiểm thử</text><text class="l" x="476" y="185" text-anchor="middle">CLAUDE.md</text>
+      <text class="l" x="538" y="172" text-anchor="middle">PR #1–#3</text><text class="l" x="538" y="185" text-anchor="middle">sync, Excel</text>
+      <text class="l" x="600" y="172" text-anchor="middle">PR #4–#6</text><text class="l" x="600" y="185" text-anchor="middle">tài liệu</text>
+      <text class="l" x="662" y="172" text-anchor="middle">PR #7</text><text class="l" x="662" y="185" text-anchor="middle">CI</text>
+      <text class="l" x="724" y="172" text-anchor="middle">PR #8</text><text class="l" x="724" y="185" text-anchor="middle">khung, 2 màn</text>
+      <text class="l" x="786" y="172" text-anchor="middle">PR #10</text><text class="l" x="786" y="185" text-anchor="middle">sửa lọc</text>
 
-      <!-- nhánh con -->
-      <path class="br" style="stroke:var(--muted)" d="M722 150 C 745 150, 750 225, 775 225"/>
-      <circle class="n hollow" style="stroke:var(--muted)" cx="775" cy="225" r="6"/><circle cx="775" cy="225" r="3" style="fill:var(--muted)"/>
-      <text class="m" x="793" y="222">docs/bao-cao-nghiem-thu</text>
-      <text class="s" x="793" y="238" style="fill:var(--dev)">Dev · 1 commit · chưa có PR</text>
+      <!-- nhánh đang mở -->
+      <path class="br tester" d="M786 150 L 812 150 C 828 150, 828 235, 844 235"/>
+      <circle class="n tester" style="fill:var(--tester)" cx="844" cy="235" r="6"/>
+      <text class="m" x="860" y="232">test/csv-edge-cases</text>
+      <text class="s" x="860" y="248" style="fill:var(--tester)">Tester · PR #9 · đã duyệt, chờ gộp</text>
 
-      <path class="br tester" d="M722 150 C 745 150, 750 285, 775 285"/>
-      <circle class="n tester" style="fill:var(--tester)" cx="775" cy="285" r="6"/>
-      <text class="m" x="793" y="282">feat/giao-dich-va-lich</text>
-      <text class="s" x="793" y="298" style="fill:var(--tester)">Tester · Đàm Thuận Khải · 2 commit · chưa có PR</text>
+      <path class="br" style="stroke:var(--dev)" d="M786 150 L 812 150 C 828 150, 828 295, 844 295"/>
+      <circle class="dev n" cx="844" cy="295" r="6"/>
+      <text class="m" x="860" y="292">feat/so-du-luy-ke</text>
+      <text class="s" x="860" y="308" style="fill:var(--dev)">Dev · PR #11 · chờ review</text>
 
-      <path class="br po" d="M722 150 C 745 150, 750 345, 775 345"/>
-      <circle class="n hollow po" cx="775" cy="345" r="6"/>
-      <text class="m" x="793" y="342">feat/dashboard-va-bieu-do</text>
-      <text class="s" x="793" y="358" style="fill:var(--po)">PO · Nguyễn Tú Anh · chưa có commit</text>
-      <text class="s" x="793" y="373">tụt 19 commit so với develop</text>
+      <path class="br po" d="M844 301 L 844 349"/>
+      <circle class="n po" style="fill:var(--po)" cx="844" cy="355" r="6"/>
+      <text class="m" x="860" y="352">feat/dashboard-va-bieu-do</text>
+      <text class="s" x="860" y="368" style="fill:var(--po)">PO (Dev viết) · PR #12 · chờ review</text>
+      <text class="s" x="860" y="383">nối tiếp #11 · 17 commit</text>
     </svg>
     </div>
-    <figcaption>Chấm đặc là nhánh đã có commit riêng, chấm rỗng là nhánh vừa tạo và chưa có commit. Nhánh <code>feat/dong-bo-csv-va-excel</code> của Dev đã gộp qua PR #3 nên không còn trên GitHub. Hai nhánh Tester và PO đang tụt so với <code>develop</code> (15 và 19 commit), nên bước đầu là gộp <code>develop</code> vào nhánh của mình. Thứ tự theo quy chế: nhánh tính năng, mở PR vào <code>develop</code>, một người khác duyệt rồi mới gộp. <code>main</code> chỉ nhận từ <code>develop</code> khi bàn giao.</figcaption>
+    <figcaption>Chấm xanh là commit của Dev, chấm hồng là PR của Tester. Các nhánh đã gộp (<code>feat/dong-bo-csv-va-excel</code>, <code>feat/giao-dich-va-lich</code>, <code>fix/bo-loc-ngay-va-xoa-giao-dich</code>, các nhánh <code>docs/…</code>) không còn trên GitHub. Nhánh <code>feat/dashboard-va-bieu-do</code> được tách từ <code>feat/so-du-luy-ke</code>, vì thẻ "Số dư" cần hàm mới ở tầng dữ liệu. Thứ tự theo quy chế: nhánh tính năng, mở PR vào <code>develop</code>, một người khác duyệt rồi mới gộp. <code>main</code> chỉ nhận từ <code>develop</code> khi bàn giao.</figcaption>
   </figure>
 </section>
 
@@ -258,30 +260,32 @@ a { color: var(--dev); }
     <thead><tr><th>Đường dẫn</th><th>Là gì</th><th>Chủ</th><th>Trạng thái</th></tr></thead>
     <tbody>
       <tr class="grp"><td colspan="4">gốc repo</td></tr>
-      <tr><td>CLAUDE.md · AGENTS.md</td><td>Luật làm việc cho AI agent: phân tầng, 5 bất biến dữ liệu, quy ước commit. Hai file có nội dung giống nhau.</td><td><span class="chip all">cả nhóm</span></td><td class="st done">đã có</td></tr>
-      <tr><td>README.md</td><td>Trang giới thiệu, bảng phân công, trạng thái tính năng. Các mục sơ đồ mermaid, quyết định kỹ thuật và nhật ký kiểm thử còn để trống.</td><td><span class="chip po">PO</span> tổng hợp</td><td class="st done">đã có, còn trống vài mục</td></tr>
+      <tr><td>CLAUDE.md · AGENTS.md</td><td>Luật làm việc cho AI agent: phân tầng, 5 bất biến dữ liệu, quy ước commit. <code>CLAUDE.md</code> có thêm mục 9 (trạng thái hiện tại) và mục 10 (phải xem kết quả render); <code>AGENTS.md</code> có thêm danh sách API dữ liệu dựng sẵn cho giao diện.</td><td><span class="chip all">cả nhóm</span></td><td class="st done">đã có</td></tr>
+      <tr><td>README.md</td><td>Trang giới thiệu, bảng phân công, trạng thái tính năng, 3 sơ đồ mermaid, bảng quyết định kỹ thuật, hướng dẫn cài đặt và chạy thử. Mục 6 (nhật ký kiểm thử, hạn chế) còn để trống.</td><td><span class="chip po">PO</span> tổng hợp</td><td class="st done">đã có, còn trống mục 6</td></tr>
+      <tr><td>.github/workflows/ci.yml</td><td>CI trên GitHub Actions: mỗi PR vào <code>develop</code> tự chạy format, analyze và test trên Ubuntu.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có (PR #7)</td></tr>
       <tr><td>IMPLEMENTATION_PLAN.md</td><td>Đặc tả của khách hàng: nghiệp vụ, schema, thuật toán sync CSV và xuất Excel.</td><td>mentor</td><td class="st done">đã có</td></tr>
       <tr><td>REQUIREMENTS.md</td><td>Đề bài, quy chế Git, tiêu chí chấm điểm.</td><td>mentor</td><td class="st done">đã có</td></tr>
       <tr><td>.github/pull_request_template.md</td><td>Mẫu mô tả PR bắt buộc điền.</td><td>mentor</td><td class="st done">đã có</td></tr>
       <tr><td>pubspec.yaml</td><td>Danh sách thư viện: Riverpod, Drift, fl_chart, csv, excel, file_picker, window_manager...</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>analysis_options.yaml</td><td>Luật kiểm tra code tĩnh (<code>flutter analyze</code>).</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>docs/ban-do-du-an.html</td><td>Chính trang này: bản đồ dự án cho cả nhóm.</td><td><span class="chip all">cả nhóm</span></td><td class="st done">đã có</td></tr>
-      <tr><td>docs/BAO_CAO_NGHIEM_THU.md</td><td>Báo cáo nghiệm thu phân hệ dữ liệu và đồng bộ của Dev, kèm kịch bản Golden Path chạy tay.</td><td><span class="chip dev">Dev</span></td><td class="st wip">nhánh <code>docs/bao-cao-nghiem-thu</code>, chưa PR</td></tr>
+      <tr><td>docs/BAO_CAO_NGHIEM_THU.md</td><td>Báo cáo nghiệm thu phân hệ dữ liệu và đồng bộ của Dev, kèm kịch bản Golden Path chạy tay.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có (PR #5), cập nhật 26/11</td></tr>
       <tr><td>windows/</td><td>Mã nền Windows do Flutter sinh ra (cửa sổ, icon, CMake). Không cần sửa tay.</td><td>tự sinh</td><td class="st done">đã có</td></tr>
 
       <tr class="grp"><td colspan="4">lib/ — mã ứng dụng</td></tr>
       <tr><td>main.dart</td><td>Điểm khởi động. Mở cửa sổ 1280×800 (tối thiểu 1200×760), nạp cấu hình, và nạp dữ liệu mẫu nếu chạy với <code>SEED_MOCK=true</code>.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
-      <tr><td>app.dart</td><td>Khung <code>MaterialApp</code> tạm thời, chỉ hiện một dòng chữ. Chưa truyền nút Sync, Export vào giao diện và chưa bọc hai bộ lắng nghe thông báo. Sẽ được thay bằng theme của PO và khung màn hình của Tester.</td><td><span class="chip tester">Tester</span> <span class="chip po">PO</span></td><td class="st todo">placeholder</td></tr>
-      <tr><td>core/constants/default_categories.dart</td><td>9 danh mục chi và 5 danh mục thu mặc định, cùng bảng màu cho danh mục tự tạo.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
-      <tr><td>core/utils/year_month.dart</td><td>Hai hàm nhỏ: <code>yearMonthOf</code> (ra chuỗi <code>2026-11</code>) và <code>dateOnly</code> (cắt giờ, giữ ngày).</td><td><span class="chip po">PO</span></td><td class="st done">đã có</td></tr>
-      <tr><td>core/theme/</td><td>Giao diện chung: màu, chữ, kiểu nút.</td><td><span class="chip po">PO</span></td><td class="st todo">rỗng</td></tr>
-      <tr><td>core/widgets/</td><td>Khung màn hình ngang <code>DesktopShell</code>: thanh điều hướng bên trái và thanh nút phía trên <code>TopActionBar</code> (Sync, Export, Thêm giao dịch). Trên <code>develop</code> thư mục còn rỗng; hai widget này đã viết ở nhánh của Tester.</td><td><span class="chip tester">Tester</span></td><td class="st wip">nhánh <code>feat/giao-dich-va-lich</code>, chưa PR</td></tr>
+      <tr><td>app.dart</td><td><code>MaterialApp</code> dùng <code>DesktopShell</code> với màn Lịch và Giao dịch (trên <code>develop</code>); PR #12 thêm <code>AppTheme</code> và màn Dashboard. Chưa truyền nút Sync, Xuất Excel vào giao diện và chưa bọc hai bộ lắng nghe thông báo.</td><td><span class="chip tester">Tester</span> <span class="chip po">PO</span> <span class="chip dev">Dev</span></td><td class="st todo">chưa nối Sync/Export</td></tr>
+      <tr><td>core/constants/default_categories.dart</td><td>9 danh mục chi và 5 danh mục thu mặc định, bảng màu cho danh mục tự tạo, ngưỡng chi lớn 500.000 ₫ cho Visual Notes.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
+      <tr><td>core/utils/year_month.dart</td><td><code>yearMonthOf</code> (ra chuỗi <code>2026-11</code>), <code>dateOnly</code> (cắt giờ, giữ ngày). PR #12 thêm <code>firstDayOfMonth</code> và <code>addMonths</code> để chuyển tháng.</td><td><span class="chip po">PO</span></td><td class="st done">đã có</td></tr>
+      <tr><td>core/utils/formatters.dart</td><td>Định dạng hiển thị dùng chung: <code>1.250.000 ₫</code>, dạng rút gọn <code>1,2tr</code> cho trục biểu đồ, ngày <code>dd/MM/yyyy</code>, tháng <code>MM/YYYY</code>.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
+      <tr><td>core/theme/</td><td><code>AppColors</code> (màu Thu, Chi, đáng chú ý) và <code>AppTheme.light()</code>: Material 3 cho màn hình ngang, Card viền mảnh, nền trang xám nhạt.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
+      <tr><td>core/widgets/</td><td>Khung màn hình ngang <code>DesktopShell</code>: thanh điều hướng bên trái (Dashboard, Calendar, Transactions) và thanh nút phía trên <code>TopActionBar</code> (Sync iCloud CSV, Xuất Excel).</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có (PR #8)</td></tr>
 
       <tr class="grp"><td colspan="4">lib/data/ — chỗ duy nhất được chạm database</td></tr>
       <tr><td>data/database/app_database.dart</td><td>Khai báo 3 bảng, các enum, index, và seed danh mục khi tạo DB lần đầu.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>data/database/*.g.dart</td><td>Code do <code>build_runner</code> sinh từ khai báo bảng. Không sửa tay, cũng không cần đọc.</td><td>tự sinh</td><td class="st done">đã có</td></tr>
       <tr><td>data/database/daos/categories_dao.dart</td><td>Truy vấn danh mục: liệt kê, tìm theo tên, <code>getOrCreateByName</code> (tìm, chưa có thì tạo).</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
-      <tr><td>data/database/daos/transactions_dao.dart</td><td>Thêm/sửa/xóa giao dịch, lọc đa chiều, tổng thu chi, tổng thu chi từng tháng (<code>watchMonthlySeries</code>, cho biểu đồ cột), cơ cấu danh mục, dòng tiền theo ngày, Visual Notes, dữ liệu cho Excel.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
+      <tr><td>data/database/daos/transactions_dao.dart</td><td>Thêm/sửa/xóa giao dịch, lọc đa chiều, tổng thu chi, tổng thu chi từng tháng (<code>watchMonthlySeries</code>, cho biểu đồ cột), cơ cấu danh mục, dòng tiền theo ngày, Visual Notes, dữ liệu cho Excel. PR #11 thêm <code>watchTotalsUntil</code>: tổng lũy kế đến hết một tháng, cho thẻ "Số dư".</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có (+ PR #11)</td></tr>
       <tr><td>data/database/mock_data.dart</td><td>29 giao dịch mẫu cho tháng 10 và 11/2026 để dựng giao diện khi chưa có sync.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>data/models/transaction_models.dart</td><td>Các kiểu dữ liệu trao đổi giữa tầng: giao dịch mới, giao dịch kèm danh mục, tổng thu chi, tổng theo danh mục, dòng tiền một ngày.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>data/repositories/transaction_repository.dart</td><td>Cổng đọc-ghi giao dịch cho phần còn lại của app.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
@@ -294,21 +298,28 @@ a { color: var(--dev); }
       <tr><td>features/icloud_sync/services/csv_sync_service.dart</td><td><code>CsvSyncService</code>: đọc <code>pending_transactions.csv</code> (UTF-8, tối đa 5 MB), kiểm tra từng dòng, ghi vào DB, chỉ xóa dòng đã nhập sau khi COMMIT và giữ dòng lỗi (I2).</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>features/icloud_sync/domain/sync_result.dart</td><td>Kết quả một lần Sync, dòng bị từ chối, và <code>SyncException</code> mang thông báo tiếng Việt.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>features/icloud_sync/providers/sync_controller.dart</td><td><code>SyncController</code>: logic của nút Sync, gồm hộp thoại chọn file CSV. Mọi lỗi đổi thành thông báo thân thiện, không làm app crash.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
+      <tr><td>features/icloud_sync/presentation/csv_path_dialog.dart</td><td>Hộp thoại "Cấu hình file CSV" mở từ Dashboard: xem đường dẫn đang lưu, chọn file khác, bỏ đường dẫn, cảnh báo khi file không còn tồn tại.</td><td><span class="chip dev">Dev</span></td><td class="st wip">PR #12</td></tr>
       <tr><td>features/icloud_sync/presentation/sync_feedback.dart</td><td><code>SyncFeedbackListener</code>: hiện SnackBar kết quả và hộp thoại liệt kê dòng lỗi. Chưa được bọc vào <code>app.dart</code>.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có, chưa gắn</td></tr>
       <tr><td>features/excel_export/services/excel_export_service.dart</td><td><code>ExcelExportService</code>: xuất <code>.xlsx</code>, mỗi tháng một Sheet <code>MM-YYYY</code> theo <code>transaction_date</code> (I3), tiền ghi dạng số nguyên (I1), chống Formula Injection.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>features/excel_export/providers/export_controller.dart</td><td><code>ExportController</code>: logic của nút Export, gồm hộp thoại lưu file.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>features/excel_export/presentation/export_feedback.dart</td><td><code>ExportFeedbackListener</code>: SnackBar báo kết quả xuất. Chưa được bọc vào <code>app.dart</code>.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có, chưa gắn</td></tr>
-      <tr><td>features/dashboard/</td><td>Màn Tổng quan: 3 thẻ KPI, biểu đồ, Visual Notes, hộp thoại chọn đường dẫn CSV.</td><td><span class="chip po">PO</span></td><td class="st todo">rỗng</td></tr>
-      <tr><td>features/transactions/</td><td>Màn Giao dịch: bảng, bộ lọc, form thêm/sửa/xóa. Trên <code>develop</code> còn rỗng; Tester đã viết màn hình, thanh lọc, form và provider ở nhánh riêng.</td><td><span class="chip tester">Tester</span></td><td class="st wip">nhánh <code>feat/giao-dich-va-lich</code>, chưa PR</td></tr>
-      <tr><td>features/calendar_view/</td><td>Màn Lịch chi tiêu: lưới tháng và chi tiết từng ngày.</td><td><span class="chip tester">Tester</span></td><td class="st todo">rỗng</td></tr>
+      <tr><td>features/dashboard/</td><td>Màn Tổng quan: bộ chọn tháng, 3 thẻ KPI (số dư lũy kế, thu tháng, chi tháng), biểu đồ cột Thu–Chi 6 tháng, PieChart cơ cấu chi, bảng Visual Notes, nút mở hộp thoại cấu hình file CSV.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
+      <tr><td>features/transactions/</td><td>Màn Giao dịch: bảng, bộ lọc đa chiều (khoảng ngày tự đảo khi chọn ngược), form thêm/sửa/xóa, báo lỗi khi xóa thất bại.</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có (PR #8, #10)</td></tr>
+      <tr><td>features/calendar_view/</td><td>Màn Lịch chi tiêu: lưới tháng hiện <code>+Thu / -Chi</code> từng ngày (65% trái) và chi tiết ngày đang chọn (35% phải).</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có (PR #8)</td></tr>
 
-      <tr class="grp"><td colspan="4">test/ — tổng cộng 77 test, chạy bằng <code>flutter test</code></td></tr>
-      <tr><td>test/database_test.dart</td><td>25 test cho tầng dữ liệu: seed, I1, I3, I4, I5, bộ lọc, truy vấn Dashboard/Calendar, dữ liệu mẫu. Chạy trên database trong RAM.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
+      <tr class="grp"><td colspan="4">test/ — 99 test trên <code>develop</code>, 119 test khi gộp PR #11 và #12, chạy bằng <code>flutter test</code></td></tr>
+      <tr><td>test/database_test.dart</td><td>27 test cho tầng dữ liệu: seed, I1, I3, I4, I5, bộ lọc, truy vấn Dashboard/Calendar, số dư lũy kế (2 test của PR #11), dữ liệu mẫu. Chạy trên database trong RAM.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/csv_sync_test.dart</td><td>29 test cho Sync CSV: nhập thành công, I1, I2 (xóa sau COMMIT, giữ dòng lỗi, DB lỗi giữa chừng), I4, ghi chú đáng chú ý, ngày/loại sai, file lỗi.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/excel_export_test.dart</td><td>8 test cho xuất Excel: tên Sheet, gom theo tháng, tiền là số, chống Formula Injection.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/controllers_test.dart</td><td>4 test cho nút Sync và Export: hủy chọn file, không có dữ liệu, xuất thành công.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/sync_feedback_test.dart</td><td>10 test cho thông điệp tiếng Việt và widget báo kết quả Sync, Export.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
       <tr><td>test/acceptance_flow_test.dart</td><td>Kịch bản nghiệm thu: Sync file CSV mẫu rồi Export. Dùng <code>test/fixtures/pending_transactions_nghiem_thu.csv</code>.</td><td><span class="chip dev">Dev</span></td><td class="st done">đã có</td></tr>
+      <tr><td>test/transactions_*_test.dart</td><td>16 test cho màn Giao dịch: bộ lọc, tự đảo khoảng ngày, thêm/sửa/xóa cập nhật bảng ngay (I5), xóa lỗi không crash.</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có</td></tr>
+      <tr><td>test/calendar_*_test.dart</td><td>6 test cho màn Lịch: chuyển tháng, gom theo <code>transaction_date</code> (I3), tổng bằng số nguyên, tự cập nhật (I5).</td><td><span class="chip tester">Tester</span></td><td class="st done">đã có</td></tr>
+      <tr><td>test/csv_edge_cases_qa_test.dart</td><td>3 test với bộ CSV bẫy: BOM, dấu <code>;</code>, ghi chú nhiều dòng, formula injection, 9 dòng lỗi được giữ lại. Từng đỏ trên Windows vì fixture bị đổi sang CRLF khi checkout; đã sửa bằng <code>.gitattributes</code>.</td><td><span class="chip tester">Tester</span></td><td class="st wip">PR #9, đã duyệt</td></tr>
+      <tr><td>test/formatters_test.dart</td><td>6 test định dạng tiền, ngày, tháng và cộng tháng qua năm.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
+      <tr><td>test/dashboard_*_test.dart</td><td>9 test cho Dashboard: tháng đang xem, tổng tháng và số dư lũy kế có khoản nhập bù (I3), chuỗi 6 tháng, cơ cấu chi, Visual Notes, KPI tự đổi khi thêm giao dịch (I5), trạng thái rỗng.</td><td><span class="chip po">PO</span> Dev viết</td><td class="st wip">PR #12</td></tr>
+      <tr><td>test/csv_path_dialog_test.dart</td><td>3 test cho hộp thoại cấu hình file CSV: chọn, bỏ đường dẫn, hủy chọn, cảnh báo file không tồn tại.</td><td><span class="chip dev">Dev</span></td><td class="st wip">PR #12</td></tr>
     </tbody>
   </table>
   </div>
@@ -369,7 +380,7 @@ a { color: var(--dev); }
     <div><b>I4</b><span>Danh mục khớp bằng tên đã chuẩn hóa cộng loại. "Ăn uống", "ăn uống " và "ĂN UỐNG" là cùng một danh mục.</span></div>
     <div><b>I5</b><span>Màn hình tự cập nhật sau mọi thay đổi dữ liệu, không cần khởi động lại.</span></div>
   </div>
-  <p>Cả năm bất biến đã có test: I1, I3, I4, I5 trong <code>database_test.dart</code>, I1, I2, I4 thêm ở <code>csv_sync_test.dart</code> (kể cả ca database lỗi giữa chừng để kiểm tra file CSV không bị đụng tới).</p>
+  <p>Cả năm bất biến đã có test: I1, I3, I4, I5 trong <code>database_test.dart</code>, I1, I2, I4 thêm ở <code>csv_sync_test.dart</code> (kể cả ca database lỗi giữa chừng để kiểm tra file CSV không bị đụng tới). Phía giao diện, I5 có widget test ở cả 3 màn: thêm, sửa, xóa giao dịch xong thì bảng, lưới lịch và thẻ KPI đổi ngay. Biểu đồ <code>fl_chart</code> cần số thực nên chỉ đổi <code>int</code> sang <code>double</code> đúng lúc vẽ; mọi tổng và phần trăm vẫn tính bằng số nguyên (I1).</p>
 </section>
 
 <section>
@@ -394,9 +405,9 @@ a { color: var(--dev); }
 <section>
   <h2>8. Còn thiếu gì và ai làm</h2>
   <div class="gl">
-    <div><h3><span class="chip dev">Dev</span> Sync CSV và Excel: xong</h3><p>PR #3 đã gộp. Còn lại: mở PR cho báo cáo nghiệm thu, chạy tay Golden Path để điền mục 7 của báo cáo, và hoàn thiện mục 3, 4 của README. Sau khi nhánh Tester vào <code>develop</code>, mở PR gắn Sync và Export vào <code>DesktopShell</code> và bọc hai bộ lắng nghe trong <code>app.dart</code>.</p></div>
-    <div><h3><span class="chip tester">Tester</span> Khung app, Giao dịch, Lịch</h3><p>Đã có <code>DesktopShell</code>, <code>TopActionBar</code> và màn Giao dịch ở nhánh riêng, chưa có PR. Việc kế tiếp: gộp <code>develop</code> vào nhánh (tụt 15 commit), chạy lại test, mở PR. Màn Lịch chưa có code. Nút Sync và Export có controller sẵn: dùng <code>syncControllerProvider</code> và <code>exportControllerProvider</code>.</p></div>
-    <div><h3><span class="chip po">PO</span> Theme, Dashboard</h3><p>Nhánh chưa có commit và tụt 19 commit so với <code>develop</code>, nên gộp <code>develop</code> vào trước. Dữ liệu đã đủ: tổng thu chi, cơ cấu danh mục, Visual Notes, và <code>watchMonthlySeries</code> cho biểu đồ cột Thu/Chi từng tháng. Hộp thoại chọn đường dẫn CSV dùng <code>SettingsRepository</code> đã xong.</p></div>
+    <div><h3><span class="chip dev">Dev</span> Sync, Excel: xong · nối nút: chưa</h3><p>Đã mở PR #11 (số dư lũy kế) và PR #12 (Dashboard, theme, formatter, hộp thoại file CSV), viết thay phần code của PO; cả hai chờ review, gộp #11 trước. Việc kế tiếp: sau khi #12 vào <code>develop</code>, mở PR nối nút Sync và Xuất Excel vào <code>DesktopShell</code> và bọc hai bộ lắng nghe trong <code>app.dart</code>; chạy tay Golden Path (kể cả mở file xlsx bằng Excel thật) để điền mục 7 báo cáo nghiệm thu; quyết định có chuẩn hóa <code>\r\n</code> trong ghi chú CSV hay không.</p></div>
+    <div><h3><span class="chip tester">Tester</span> Khung app, Giao dịch, Lịch: xong</h3><p><code>DesktopShell</code>, <code>TopActionBar</code>, màn Giao dịch và màn Lịch đã vào <code>develop</code> (PR #8, #10). Việc kế tiếp: gộp PR #9 (Dev đã duyệt sau khi thêm <code>.gitattributes</code>, test xanh trên Windows); review chéo PR #11 và #12; chuyển <code>transaction_formatters.dart</code> sang <code>core/utils/formatters.dart</code>; điền README mục 6.1 (kết quả kiểm thử).</p></div>
+    <div><h3><span class="chip po">PO</span> Theme, Dashboard: chờ review</h3><p>Code của phần này nằm ở PR #12 (Dev viết thay). Việc kế tiếp: đọc và chạy thử PR #12; chốt Golden Path và kịch bản demo với mentor; điền README mục 6.2 (hạn chế và hướng cải tiến).</p></div>
   </div>
 </section>
 </main>

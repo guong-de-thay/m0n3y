@@ -1,0 +1,22 @@
+Ngày,Loại,Danh mục,Số tiền,Ghi chú
+24/11/2026,Chi,  ăn uống  ,65000,Phở bò buổi sáng
+24/11/2026,Chi,ĂN UỐNG,45000,Bánh mì trứng
+20/11/2026,Chi,Thú cưng,180000,Mua cát mèo
+21/11/2026,Chi,  thú cưng ,90000,Đồ chơi cho mèo
+28/10/2026,Thu,Thưởng,3000000,Thưởng dự án tháng 10
+2026-10-15,Chi,Mua sắm,600000,"*Mua ghế công thái học, bảo hành 2 năm"
+22/11/2026,Chi,Ăn uống,150000,"Ăn tối, tráng miệng
+Có xuất hóa đơn"
+23/11/2026,Chi,=Quà,50000,"=CMD|' /C calc'!A0"
+23/11/2026,Chi,Khác,25000,+SUM(1;2)
+23/11/2026,Chi,Khác,30000,-1+1
+23/11/2026,Chi,Khác,35000,@SUM(A1:A5)
+31/02/2026,Chi,Ăn uống,50000,Ngày không tồn tại
+khong-phai-ngay,Chi,Ăn uống,50000,Ngày sai cú pháp
+24/11/2026,Chi,Ăn uống,1.5,Số tiền thập phân
+24/11/2026,Chi,Ăn uống,-50000,Số tiền âm
+24/11/2026,Chi,Ăn uống,0,Số tiền bằng 0
+24/11/2026,Chi,Ăn uống,abc,Số tiền là chữ
+24/11/2026,Chi,Ăn uống,65k,Số tiền có hậu tố k
+24/11/2026,Chuyển khoản,Khác,100000,Loại giao dịch lạ
+24/11/2026,Chi,Ăn uống
